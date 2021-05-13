@@ -1,0 +1,183 @@
+@inherits RocketEcommerce.Components.RocketEcommerceTokens<Simplisity.SimplisityRazor>
+@using DNNrocketAPI;
+@using Simplisity;
+@using RocketEcommerce.Components;
+@using DNNrocketAPI.Components;
+@using DNNrocket.Country.Components;
+
+@AddProcessData("resourcepath", "/DesktopModules/RocketThemes/dnnrocketmodule/Rocket_HtmlContent/1.0/resx/")
+@AddProcessData("resourcepath", "/DesktopModules/DNNrocket/Images/App_LocalResources/")
+@AddProcessData("resourcepath", "/DesktopModules/DNNrocket/api/App_LocalResources/")
+@AddProcessData("resourcepath", "/DesktopModules/DNNrocketModules/RocketECommerce/App_LocalResources/")
+
+@{
+    var info = new SimplisityInfo();
+    var cartData = (CartLimpet)Model.List.First();
+    if (cartData.Record != null)
+    {
+        info = new SimplisityInfo(cartData.Record);
+    }
+
+    var systemInfoData = new SystemLimpet("rocketecommerce");
+    var rocketInterface = new RocketInterface(systemInfoData.Info, "settingcountry");
+    var countryData = new CountryLimpet(PortalUtils.GetPortalId(), rocketInterface);
+    var remoteParam = (RemoteLimpet)Model.GetDataObject("remoteparam");
+
+    // We need the moduleid, the first remote call will have the moduleid, subsequent call need to have the remote module passed by the s-field
+    var moduleId = Model.ModuleId;
+    var tabId = Model.TabId;
+    if (remoteParam != null)
+    {
+        moduleId = remoteParam.ModuleId;
+        tabId = remoteParam.TabId;
+    }
+
+    var portalShop = (PortalShopLimpet)Model.GetDataObject("portalshop");
+
+}
+
+@AddProcessData("resourcepath", "/DesktopModules/RocketThemes/rocketecommerce/" + portalShop.AppTheme.AppThemeFolder + "/" + portalShop.AppTheme.AppVersionFolder + "/resx/")
+
+<div id="datasection" class="w3-container">
+
+    <div id="shipingdetails">
+
+        <div id="rocketecommerce_addressmodelship">
+            <h3>@ResourceKey("RE.shippingaddress", remoteParam.CultureCode)</h3>
+
+            <div class="w3-margin-bottom">
+                @CheckBox(info, "genxml/shipaddress/collectinstore", "&nbsp;" + ResourceKey("RE.collectinstore", remoteParam.CultureCode).ToString(), "class='w3-check '", false)
+            </div>
+
+            <div id="shippingaddressinput">
+
+                <div class="w3-margin-bottom">
+                    @CheckBox(info, "genxml/shipaddress/usebillingaddress", "&nbsp;" + ResourceKey("RE.usebillingaddress", remoteParam.CultureCode).ToString(), "class='w3-check '", true)
+                    <a class="w3-button w3-border w3-light-grey w3-right editshipbutton" onclick="editshipaddress();">@ButtonText(ButtonTypes.edit)</a>
+                    <div class="w3-clear"></div>
+                </div>
+
+                <div class="w3-container w3-border w3-padding-32">
+
+                    <div class="w3-row">
+                        <div class="w3-half w3-padding-small">
+                            <label>@ResourceKey("RE.firstname", remoteParam.CultureCode)</label>
+                            @TextBox(info, "genxml/shipaddress/shipfirstname", " class='w3-input w3-border shipaddress'  disabled")
+                        </div>
+                        <div class="w3-half w3-padding-small">
+                            <label>@ResourceKey("RE.lastname", remoteParam.CultureCode)</label>
+                            @TextBox(info, "genxml/shipaddress/shiplastname", " class='w3-input w3-border shipaddress'   disabled")
+                        </div>
+                    </div>
+                    <div class="w3-row">
+                        <div class="w3-half w3-padding-small">
+                            <label>@ResourceKey("RE.email", remoteParam.CultureCode)</label>
+                            @TextBox(info, "genxml/shipaddress/shipemail", " class='w3-input w3-border shipaddress' name='email' email  disabled")
+                        </div>
+                        <div class="w3-half w3-padding-small">
+                            <label>@ResourceKey("RE.phone", remoteParam.CultureCode)</label>
+                            @TextBox(info, "genxml/shipaddress/shipphone", " class='w3-input w3-border shipaddress'  disabled")
+                        </div>
+                    </div>
+
+                    <div class="w3-row w3-padding-small">
+                        <label>@ResourceKey("RE.company", remoteParam.CultureCode)</label>
+                        @TextBox(info, "genxml/shipaddress/shipcompany", " class='w3-input w3-border shipaddress' autocomplete='off' disabled")
+                    </div>
+                    <div class="w3-row w3-padding-small">
+                        <label>@ResourceKey("RE.address1", remoteParam.CultureCode)</label>
+                        @TextBox(info, "genxml/shipaddress/shipaddress1", " class='w3-input w3-border shipaddress' autocomplete='off'  disabled")
+                    </div>
+                    <div class="w3-row w3-padding-small">
+                        <label>@ResourceKey("RE.address2", remoteParam.CultureCode)</label>
+                        @TextBox(info, "genxml/shipaddress/shipaddress2", " class='w3-input w3-border shipaddress' autocomplete='off' disabled")
+                    </div>
+                    <div class="w3-row">
+                        <div class="w3-half w3-padding-small">
+                            <label>@ResourceKey("RE.city", remoteParam.CultureCode)</label>
+                            @TextBox(info, "genxml/shipaddress/shipcity", " class='w3-input w3-border shipaddress' autocomplete='off' disabled")
+                        </div>
+                        <div class="w3-half w3-padding-small">
+                            <label>@ResourceKey("RE.postcode", remoteParam.CultureCode)</label>
+                            @TextBox(info, "genxml/shipaddress/shippostcode", " class='w3-input w3-border shipaddress' autocomplete='off' disabled")
+                        </div>
+                    </div>
+                    <div class="w3-row">
+                        <div class="w3-half w3-padding-small">
+                            <label>@ResourceKey("RE.country", remoteParam.CultureCode)</label>
+                            @DropDownList(info, "genxml/shipaddress/shipcountry", countryData.GetSelectedDictCountries(), "class='w3-input w3-border shipaddress simplisity_change' disabled s-cmd='settingcountry_getregion' s-dropdownlist='#shipregion'")
+                        </div>
+                        <div class="w3-half w3-padding-small">
+                            <label>@ResourceKey("RE.region", remoteParam.CultureCode)</label>
+                            @{
+                                var countrycode = info.GetXmlProperty("genxml/shipaddress/shipcountry");
+                                if (countrycode == "")
+                                {
+                                    countrycode = countryData.GetPrimaryCountry();
+                                }
+                            }
+                            @DropDownList(info, "genxml/shipaddress/shipregion", countryData.RegionDictionary(countrycode), "class='w3-input w3-border shipaddress' disabled")
+                        </div>
+                    </div>
+                </div>
+                </div>
+
+        </div>
+
+        <div class="w3-row w3-margin-top w3-margin-bottom">
+            <div class="w3-button w3-border w3-left w3-margin-bottom simplisity_click" s-post="#datasection" s-cmd="rocketecommerce_savecartship" s-return='.ecommerce-container' s-fields='{"systemkey":"rocketecommerce","template":"cartaddressbill.cshtml"}'>@ButtonText(ButtonTypes.previous, remoteParam.CultureCode)</div>
+            <div class="w3-hide simplisity_click savecartship " s-post="#datasection" s-cmd="rocketecommerce_savecartship" s-return='.ecommerce-container' s-fields='{"systemkey":"rocketecommerce","template":"cartaddressship.cshtml"}'>@ButtonText(ButtonTypes.previous, remoteParam.CultureCode)</div>
+            <div class="w3-button w3-border w3-right w3-margin-left w3-margin-bottom simplisity_click" s-post="#datasection" s-cmd="rocketecommerce_savecartship" s-return='.ecommerce-container' s-fields='{"systemkey":"rocketecommerce","template":"cartsummary.cshtml"}'>@ButtonText(ButtonTypes.next, remoteParam.CultureCode)</div>
+            <div class="w3-button w3-border w3-right w3-margin-bottom w3-light-grey" onclick="location.reload();return false;">@ResourceKey("RE.continueshopping", remoteParam.CultureCode)</div>
+            <div class="w3-button w3-border w3-right w3-margin-right w3-margin-bottom simplisity_click " s-cmd="rocketecommerce_cartship" s-return='.ecommerce-container' s-fields='{"systemkey":"rocketecommerce","template":"cartaddressship.cshtml"}'>@ButtonIcon(ButtonTypes.refresh, remoteParam.CultureCode)</div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    jQuery(document).ready(function () {
+
+        if (jQuery('#collectinstore').prop('checked')) {
+            jQuery('#shippingaddressinput').hide();
+        }
+
+        @if (!cartData.ShipUseBillAddress)
+        {
+            @: jQuery('.shipaddress').prop("disabled", false);
+            @: jQuery('.editshipbutton').hide();
+        }
+
+        jQuery('#usebillingaddress').unbind("change");
+        jQuery('#usebillingaddress').change(function () {
+            if (jQuery(this).prop('checked')) {
+                jQuery('.shipaddress').prop("disabled", true);
+                jQuery('.savecartship').trigger('click');
+            }
+            else {
+                jQuery('.shipaddress').prop("disabled", false);
+                jQuery('.editshipbutton').hide();
+            }
+        });
+
+        jQuery('#collectinstore').unbind("click");
+        jQuery('#collectinstore').click(function () {
+            if (jQuery(this).prop('checked')) {
+                jQuery('#shippingaddressinput').hide();
+            }
+            else {
+                jQuery('#shippingaddressinput').show();
+            }
+        });        
+
+    });
+
+    function editshipaddress() {
+        jQuery('.shipaddress').prop("disabled", false);
+        jQuery('#usebillingaddress').prop("checked", false);
+        jQuery('.editshipbutton').hide();
+    }
+</script>
+
+
+

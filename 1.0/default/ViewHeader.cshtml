@@ -1,0 +1,78 @@
+﻿@inherits RocketEcommerce.Components.RocketEcommerceTokens<Simplisity.SimplisityRazor>
+@using DNNrocketAPI;
+@using Simplisity;
+@using RocketEcommerce.Components;
+@using DNNrocketAPI.Components;
+
+@{
+    var portalShop = (PortalShopLimpet)Model.List.First();
+    var remoteParam = (RemoteLimpet)Model.GetDataObject("remoteparam");
+
+    var moduleId = Model.ModuleId;
+    var tabId = Model.TabId;
+    // We need the moduleid, the first remote call will have the moduleid, subsequent call need to have the remote module passed by simplsityparam fields.
+    // The remote data assignments needs to be on every template header, so multiple remote modules on the same page work.
+    if (remoteParam != null)
+    {
+        moduleId = remoteParam.ModuleId;
+        tabId = remoteParam.TabId;
+    }
+
+    // NOTE: Some links and files will not be on the local server, even if DNNrocket is installed.  for these we need to use @(remoteParam.EngineURL)
+
+}
+
+<link rel="stylesheet" href="@(remoteParam.EngineURL)@DNNrocketUtils.AppendFileModifiedDate("/DesktopModules/DNNrocket/API/Themes/config-w3/1.0/css/" + portalShop.ColorTheme)">
+<script type="text/javascript" src="@(remoteParam.EngineURL)@DNNrocketUtils.AppendFileModifiedDate("/DesktopModules/DNNrocket/Simplisity/js/simplisity.js")"></script>
+<script type="text/javascript" src="@(remoteParam.EngineURL)@DNNrocketUtils.AppendFileModifiedDate("/DesktopModules/RocketThemes/rocketecommerce/" + portalShop.AppTheme.AppThemeFolder + "/" + portalShop.AppTheme.AppVersionFolder + "/js/frontend.js")"></script>
+<link rel="stylesheet" href="@(remoteParam.EngineURL)@DNNrocketUtils.AppendFileModifiedDate("/DesktopModules/RocketThemes/rocketecommerce/" + portalShop.AppTheme.AppThemeFolder + "/" + portalShop.AppTheme.AppVersionFolder + "/css/theme.css")">
+<script type="text/javascript" src="@(remoteParam.EngineURL)@DNNrocketUtils.AppendFileModifiedDate("/DesktopModules/DNNrocket/js/jquery.validate.min.js")"></script>
+
+@if (DNNrocketUtils.GetCurrentLanguageCode() != "en")
+{
+    <script type="text/javascript" src="@(remoteParam.EngineURL)@DNNrocketUtils.AppendFileModifiedDate("/DesktopModules/DNNrocket/js/localization/messages_" + DNNrocketUtils.GetCurrentLanguageCode() + ".js")"></script>
+}
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+
+<script>
+
+    // reset the session pagesize to the url or s-field param used.
+    simplisity_setSessionField('pagesize', '@Model.SessionParamsData.PageSize.ToString()')
+
+    jQuery(document).ready(function () {
+        jQuery(document).simplisityStartUp('@(portalShop.EngineUrlWithProtocol)/Desktopmodules/dnnrocket/api/rocket/action', { systemkey: 'rocketecommerce', debug: false });
+    });
+
+    function validatePayment() {
+
+        var form = jQuery("#Form");
+        form.validate({
+            rules: {
+                email: {
+                    required: true,
+                    email: true
+                },
+            },
+            errorPlacement: function () {
+                return false;  // suppresses error message text
+            },
+            invalidHandler: function (e, validator) {
+                jQuery('input').removeClass('w3-pale-red');
+                jQuery('input').removeClass('w3-border-red');
+                for (var i in validator.errorMap) {
+                    jQuery('#' + i).addClass('w3-pale-red');
+                    jQuery('#' + i).addClass('w3-border-red')
+                }
+            },
+            amount: {
+                required: true,
+                digits: true
+            },
+        });
+        if (!form.valid()) {
+            jQuery('.dovalidate').attr('s-stop', 'stop')
+        }
+    }
+
+</script>

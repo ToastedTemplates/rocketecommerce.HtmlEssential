@@ -1,0 +1,33 @@
+﻿@inherits RocketEcommerce.Components.RocketEcommerceTokens<Simplisity.SimplisityRazor>
+@using DNNrocketAPI;
+@using Simplisity;
+@using RocketEcommerce.Components;
+@using DNNrocketAPI.Components;
+
+@AddProcessData("resourcepath", "/DesktopModules/DNNrocket/api/App_LocalResources/")
+@AddProcessData("resourcepath", "/DesktopModules/DNNrocketModules/RocketECommerce/App_LocalResources/")
+
+@{
+    var cartData = (CartLimpet)Model.List.First();
+    var companyData = new CompanyLimpet(cartData.PortalId, DNNrocketUtils.GetCurrentCulture());
+    var remoteParam = (RemoteLimpet)Model.GetDataObject("remoteparam");
+    var portalShop = (PortalShopLimpet)Model.GetDataObject("portalshop");
+
+    var appThemeFolder = portalShop.AppTheme.AppThemeFolder;
+
+    // We need the moduleid, the first remote call will have the moduleid, subsequent call need to have the remote module passed by the s-field
+    var moduleId = Model.ModuleId;
+    var tabId = Model.TabId;
+    if (remoteParam != null || moduleId == 0)
+    {
+        moduleId = remoteParam.ModuleId;
+        tabId = remoteParam.TabId;
+    }
+    var cartitemList = cartData.CartItemList;
+}
+
+@AddProcessData("resourcepath", "/DesktopModules/RocketThemes/rocketecommerce/" + portalShop.AppTheme.AppThemeFolder + "/" + portalShop.AppTheme.AppVersionFolder + "/resx/")
+
+<div class="w3-border-bottom w3-margin-bottom">@(cartData.QtyCount) @ResourceKey("RE.items", remoteParam.CultureCode)</div>
+<div class="w3-margin-bottom"><strong>@(portalShop.CurrenyDisplay(cartData.SubTotal))</strong></div>
+<a id="cartdisplay" class="w3-button w3-light-grey simplisity_click " s-cmd="rocketecommerce_cartlist" s-return='.ecommerce-container' s-fields='{"systemkey":"rocketecommerce","template":"cartlist.cshtml"}'><i class='fa fas fa-shopping-cart'></i>&nbsp;@(ResourceKey("RE.viewcart", remoteParam.CultureCode))</a>

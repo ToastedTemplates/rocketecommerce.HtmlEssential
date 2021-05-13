@@ -1,0 +1,212 @@
+﻿@inherits RocketEcommerce.Components.RocketEcommerceTokens<Simplisity.SimplisityRazor>
+@using DNNrocketAPI;
+@using Simplisity;
+@using RocketEcommerce.Components;
+@using DNNrocketAPI.Components;
+
+@AddProcessData("resourcepath", "/DesktopModules/DNNrocket/api/App_LocalResources/")
+@AddProcessData("resourcepath", "/DesktopModules/DNNrocketModules/RocketECommerce/App_LocalResources/")
+
+@{
+    var cartData = (CartLimpet)Model.List.First();
+    var companyData = new CompanyLimpet(cartData.PortalId, DNNrocketUtils.GetCurrentCulture());
+    var remoteParam = (RemoteLimpet)Model.GetDataObject("remoteparam");
+    var portalShop = (PortalShopLimpet)Model.GetDataObject("portalshop");
+
+    var appThemeFolder = portalShop.AppTheme.AppThemeFolder;
+
+    // We need the moduleid, the first remote call will have the moduleid, subsequent call need to have the remote module passed by the s-field
+    var moduleId = Model.ModuleId;
+    var tabId = Model.TabId;
+    if (remoteParam != null)
+    {
+        moduleId = remoteParam.ModuleId;
+        tabId = remoteParam.TabId;
+    }
+    var cartitemList = cartData.CartItemList;
+}
+
+@AddProcessData("resourcepath", "/DesktopModules/RocketThemes/rocketecommerce/" + portalShop.AppTheme.AppThemeFolder + "/" + portalShop.AppTheme.AppVersionFolder + "/resx/")
+
+    <div id="datasection" class="w3-container">
+
+        @if (cartitemList.Count > 0)
+        {
+            <div class="w3-border w3-padding">
+                <div class="w3-border-bottom"><h3>@ResourceKey("essential1.youhave", remoteParam.CultureCode) @cartData.QtyCount @ResourceKey("RE.items", remoteParam.CultureCode) @ResourceKey("essential1.inyourcart", remoteParam.CultureCode)</h3></div>
+                <ul class="w3-ul">
+                    @{
+                        var lp1 = 0;
+                        decimal carttotal = 0;
+                    }
+                    @foreach (var cItem in cartitemList)
+                    {
+                        lp1 += 1;
+                        var logoRelPath = cItem.ProductData.LogoRelPath;
+                        if (cItem.ProductData.LogoRelPath == "")
+                        {
+                            logoRelPath = "/DesktopModules/DNNrocket/api/images/noimage2.png";
+                        }
+
+
+                        var selectedModel = cItem.ProductData.GetModel(cItem.ModelId);
+                        var cartitemtotal = Convert.ToDecimal(cItem.Qty) * cItem.PriceWithOptions;
+                        carttotal += cartitemtotal;
+                        if (selectedModel != null)
+                        {
+                            <li class="w3-bar products">
+                                @HiddenField(new SimplisityInfo(cItem.Record), "genxml/key", "", "", false, lp1)
+
+                                <div class="w3-bar-item w3-hide-small w3-left"><img src="@ThumbnailImageWebsiteDomainUrl(portalShop.EngineUrlWithProtocol, logoRelPath, 120, 120)" style="width:85px;"></div>
+
+                                <div class="w3-bar-item w3-row w3-left">
+                                    <div class="w3-bar-item w3-border w3-button w3-center product-subtract" idxrow="@(lp1)">&minus;</div>
+                                    <input id="qty_@(lp1)" s-xpath="genxml/qty" class="w3-bar-item w3-input w3-border-top w3-border-bottom w3-center qtyvalue" value="@(cItem.Qty.ToString())" maxlength="3" style="width:64px;" />
+                                    <div class="w3-bar-item w3-border w3-button w3-center product-plus" idxrow="@(lp1)">&plus;</div>
+                                    <div id="removecartitem_@(lp1)" class="w3-button w3-center w3-hide w3-large w3-right simplisity_click" s-return='.ecommerce-container' s-cmd="rocketecommerce_removecartitem" s-fields='{"cartitemindex":"@(lp1)","systemkey":"rocketecommerce","template":"cartlist.cshtml"}'>&times;</div>
+                                </div>
+
+                                <div class="w3-bar-item">
+                                    <div class="w3-row">
+                                        <div class="w3-large">
+                                            @cItem.ProductData.Name &nbsp;
+                                            <span class="w3-small">@cItem.PriceWithOptionsDisplay</span>
+                                            <input id="modelprice_@(lp1)" class="cartitemprice" idxrow="@(lp1)" value="@cItem.PriceWithOptions" type="hidden" />
+                                        </div>
+                                    </div>
+                                    <div class="w3-bar w3-small">@selectedModel.Name</div>
+                                    @{
+                                        var oLp = 1;
+                                    }
+                                    @foreach (var cartItemOption in cItem.GetSelectedOptions())
+                                    {
+                                        if (cartItemOption.SelectedText != "")
+                                        {
+                                            <span class="w3-small">
+                                                @cartItemOption.OptionName
+                                                &nbsp;:&nbsp;
+                                                @if (cartItemOption.SelectedText == "true")
+                                                {
+                                                    <span>
+                                                        <i class="far fa-check-circle"></i>
+                                                    </span>
+                                                }
+                                                else
+                                                {
+                                                    <span>
+                                                        @if (@cartItemOption.SelectedText.Length > 40)
+                                                        {
+                                                            @cartItemOption.SelectedText.Substring(0, 40)
+                                                        }
+                                                        else
+                                                        {
+                                                            @cartItemOption.SelectedText
+                                                        }
+                                                    </span>
+                                                }
+                                            </span>
+                                            oLp += 1;
+                                            <br />
+                                        }
+                                    }
+
+                                </div>
+                                <div class="w3-bar-item w3-right w3-hide-small w3-hide-medium" style="width:120px;">
+                                    <div class="w3-right-align" id="cartitemtotal@(lp1)">@(portalShop.CurrenyDisplay(cartitemtotal))</div>
+                                </div>
+
+                            </li>
+                        }
+                    }
+                </ul>
+            </div>
+
+            <div class="w3-row w3-margin-top">
+                <div class="w3-left">
+                    <div class="w3-bar">
+                        <div class="w3-bar-item w3-button w3-border w3-light-grey w3-center w3-margin-right w3-margin-bottom simplisity_click " s-cmd="rocketecommerce_savecartlist" s-post='#datasection' s-return='.ecommerce-container' s-list=".products" s-fields='{"systemkey":"rocketecommerce","template":"cartlist.cshtml"}'>@ButtonText(ButtonTypes.save, remoteParam.CultureCode)</div>
+                        <div class="w3-bar-item w3-button w3-border w3-light-grey w3-center w3-margin-right w3-margin-bottom simplisity_click " s-cmd="rocketecommerce_cartlist" s-return='.ecommerce-container' s-fields='{"systemkey":"rocketecommerce","template":"cartlist.cshtml"}'>@ButtonIcon(ButtonTypes.refresh, remoteParam.CultureCode)</div>
+                        <div class="w3-bar-item w3-button w3-border w3-light-grey w3-center w3-margin-bottom simplisity_confirmclick " s-confirm="@ResourceKey("DNNRocket.delete") ?" s-cmd="rocketecommerce_cartdelete" s-return='.ecommerce-container' s-fields='{"systemkey":"rocketecommerce","template":"cartlist.cshtml"}'>@ButtonText(ButtonTypes.delete, remoteParam.CultureCode)</div>
+                    </div>
+                 </div>
+                 <div class="w3-right">
+                    <div class="w3-bar">
+                        <div class="w3-bar-item"><b>@ResourceKey("RE.total", remoteParam.CultureCode) : </b></div>
+                        <div class="w3-bar-item"><b id="carttotal">@(portalShop.CurrenyDisplay(Convert.ToDecimal(carttotal)))</b></div>
+                    </div>
+                </div>
+            </div>
+
+        }
+        else
+        {
+            <div class="w3-row w3-xxlarge w3-center">@ResourceKey("RE.emptybasket", remoteParam.CultureCode)</div>
+        }
+
+    <div class="w3-row w3-margin-top">
+        @if (cartitemList.Count > 0)
+        {
+            <div class="w3-button w3-border w3-right w3-margin-left w3-margin-bottom simplisity_click " s-cmd="rocketecommerce_savecartlist" s-post='#datasection' s-return='.ecommerce-container' s-list=".products" s-fields='{"systemkey":"rocketecommerce","template":"cartaddresscontact.cshtml"}'>@ButtonText(ButtonTypes.next, remoteParam.CultureCode)</div>
+        }
+        <div class="w3-button w3-border w3-right w3-margin-bottom w3-light-grey" onclick="location.reload();return false;">@ResourceKey("RE.continueshopping", remoteParam.CultureCode)</div>
+    </div>
+
+    </div>
+
+<script>
+            jQuery(document).ready(function () {
+                jQuery('.ecommerce-container').activateSimplisityPanel('@(portalShop.EngineUrlWithProtocol)/Desktopmodules/dnnrocket/api/rocket/action')
+
+                // CART EVENTS
+                jQuery('.product-subtract').unbind("click");
+                jQuery('.product-subtract').click(function () {
+                    updateCartQty(jQuery(this).attr("idxrow"), -1)
+                    return false; // prevent the button click from happening
+                });
+                jQuery('.product-plus').unbind("click");
+                jQuery('.product-plus').click(function () {
+                    updateCartQty(jQuery(this).attr("idxrow"), 1)
+                    return false; // prevent the button click from happening
+                });
+                jQuery(".qtyvalue").keyup(function () {
+                    updateCartQty(jQuery(this).attr("idxrow"), 0)
+                    return false; // prevent the button click from happening
+                });
+
+            });
+
+    var formatter = new Intl.NumberFormat('@(portalShop.CurrencyCultureCode)', {
+        style: 'currency',
+        currency: '@(portalShop.CurrencyCode)',
+    });
+
+    function updateCartQty(idxrow, addvalue) {
+
+        // calc QTY
+        var qty = parseInt(jQuery('#qty_' + idxrow).val());
+        var newqty = qty + addvalue;
+        if (newqty < 1) {
+            jQuery('#removecartitem_' + idxrow).trigger("click");
+        };
+        jQuery('#qty_' + idxrow).val(newqty);
+
+        var carttotal = 0;
+        jQuery(".cartitemprice").each(function () {
+            var idxrowlp = jQuery(this).attr('idxrow');
+            var qty = parseInt(jQuery('#qty_' + idxrowlp).val());
+            var modelprice = parseFloat(jQuery('#modelprice_' + idxrowlp).val());
+            var modelitemprice = (modelprice * parseFloat(qty));
+
+            if (isNaN(modelitemprice)) {
+                jQuery('#cartitemtotal' + idxrowlp).html('0');
+            } else {
+                jQuery('#cartitemtotal' + idxrowlp).html(formatter.format(modelitemprice));
+                carttotal += modelitemprice;
+            }
+        });
+        jQuery('#carttotal').html(formatter.format(carttotal));
+    }
+
+
+
+</script>

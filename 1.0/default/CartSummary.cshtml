@@ -1,0 +1,222 @@
+@inherits RocketEcommerce.Components.RocketEcommerceTokens<Simplisity.SimplisityRazor>
+@using DNNrocketAPI;
+@using Simplisity;
+@using RocketEcommerce.Components;
+@using DNNrocketAPI.Components;
+
+@AddProcessData("resourcepath", "/DesktopModules/RocketThemes/dnnrocketmodule/Rocket_HtmlContent/1.0/resx/")
+@AddProcessData("resourcepath", "/DesktopModules/DNNrocket/Images/App_LocalResources/")
+@AddProcessData("resourcepath", "/DesktopModules/DNNrocket/api/App_LocalResources/")
+@AddProcessData("resourcepath", "/DesktopModules/DNNrocketModules/RocketECommerce/App_LocalResources/")
+
+@{
+    var info = new SimplisityInfo();
+    var cartData = (CartLimpet)Model.List.First();
+    if (cartData.Record != null)
+    {
+        info = new SimplisityInfo(cartData.Record);
+    }
+
+    var remoteParam = (RemoteLimpet)Model.GetDataObject("remoteparam");
+    var portalShop = (PortalShopLimpet)Model.GetDataObject("portalshop");
+
+    var appThemeFolder = portalShop.AppTheme.AppThemeFolder;
+
+    // We need the moduleid, the first remote call will have the moduleid, subsequent call need to have the remote module passed by the s-field
+    var moduleId = Model.ModuleId;
+    var tabId = Model.TabId;
+    if (remoteParam != null)
+    {
+        moduleId = remoteParam.ModuleId;
+        tabId = remoteParam.TabId;
+    }
+    var notificationLimpet = new NotificationLimpet(portalShop.PortalId, DNNrocketUtils.GetCurrentCulture());
+
+}
+
+<div id="datasection">
+
+    <div id="contactdetails">
+
+        <h3>@ResourceKey("RE.summary", remoteParam.CultureCode)</h3>
+
+        <div class="w3-container w3-border w3-padding-32 w3-margin-bottom">
+            <div class="w3-panel w3-light-grey" style="height:47px">
+                <h4>@ResourceKey("RE.contactdetails", remoteParam.CultureCode)</h4>
+            </div>
+            <div class="w3-row">
+                <div class="w3-half">
+                    <div>@cartData.FullName </div>
+                    <div>@cartData.Email </div>
+                    <div>@cartData.Record.GetXmlProperty("genxml/textbox/phone")</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="w3-container w3-border w3-padding-32 w3-margin-bottom">
+            <div class="w3-panel w3-light-grey" style="height:47px">
+                <h4>@ResourceKey("RE.specialinstructions", remoteParam.CultureCode)</h4>
+            </div>
+            <div class="w3-row">
+                @BreakOf(cartData.ClientNotes)
+            </div>
+        </div>
+
+        <div class="w3-container w3-border w3-padding-32 w3-margin-bottom">
+            <div class="w3-half">
+                <div class="w3-margin-right">
+                    <div class="w3-panel w3-light-grey" style="height:47px">
+                        <h4>@ResourceKey("RE.billingaddress", remoteParam.CultureCode)</h4>
+                    </div>
+                    @HtmlOf(cartData.BillAddressHtml)
+                </div>
+            </div>
+            <div class="w3-half">
+                @if (!cartData.CollectInStore)
+                {
+                    <div class="w3-panel w3-light-grey" style="height:47px">
+                        <h4>@ResourceKey("RE.shippingaddress", remoteParam.CultureCode)</h4>
+                    </div>
+                    @HtmlOf(cartData.ShipAddressHtml)
+                }
+            </div>
+        </div>
+
+        <div class="w3-container w3-border w3-padding-32">
+
+            <div class="w3-panel w3-light-grey" style="height:47px">
+                <h4>@ResourceKey("RE.products", remoteParam.CultureCode)</h4>
+            </div>
+
+            @RenderTemplate("CartItemRows.cshtml", "\\DesktopModules\\RocketThemes\\rocketecommerce", appThemeFolder, Model, "1.0", true)
+
+            <div class="w3-row">
+                <div class="w3-twothird">
+                    &nbsp
+                </div>
+                <div class="w3-third">
+                    <table class="w3-right w3-table">
+                        @if (cartData.SubTotal != cartData.Total)
+                        {
+                            <tr>
+                                <td class="w3-right-align">
+                                    <div>@ResourceKey("RE.subtotal", remoteParam.CultureCode) : </div>
+                                </td>
+                                <td class="w3-right-align">
+                                    <div>@(cartData.SubTotalDisplay)</div>
+                                </td>
+                            </tr>
+                        }
+                        @if (portalShop.IsAdminMenuTurnOn("shippingmethods"))
+                        {
+                            <tr>
+                                <td class="w3-right-align">
+                                    <div>@ResourceKey("RE.shipping", remoteParam.CultureCode) : </div>
+                                </td>
+                                <td class="w3-right-align">
+                                    <div>@(cartData.ShippingTotalDisplay)</div>
+                                </td>
+                            </tr>
+                        }
+                        @if (portalShop.IsAdminMenuTurnOn("discountmethods"))
+                        {
+                            <tr>
+                                <td class="w3-right-align">
+                                    <div>@ResourceKey("RE.discount", remoteParam.CultureCode) : </div>
+                                </td>
+                                <td class="w3-right-align">
+                                    <div>@(cartData.DiscountTotalDisplay)</div>
+                                </td>
+                            </tr>
+                        }
+                        @if (portalShop.IsAdminMenuTurnOn("taxmethods"))
+                        {
+                            <tr>
+                                <td class="w3-right-align">
+                                    <div>@ResourceKey("RE.tax", remoteParam.CultureCode) : </div>
+                                </td>
+                                <td class="w3-right-align">
+                                    <div>@(cartData.TaxTotalDisplay)</div>
+                                </td>
+                            </tr>
+                        }
+                        <tr class="">
+                            <td class="w3-right-align">
+                                <b>@ResourceKey("RE.total", remoteParam.CultureCode) :&nbsp; </b>
+                            </td>
+                            <td class="w3-right-align">
+                                <b>@(cartData.TotalDisplay)</b>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="w3-row w3-margin-top w3-margin-bottom">
+            <div class="w3-col m9">
+                <div class="w3-button w3-border w3-left w3-margin-bottom simplisity_click" s-cmd="rocketecommerce_cartship" s-return='.ecommerce-container' s-fields='{"systemkey":"rocketecommerce","template":"cartaddressship.cshtml"}'>@ButtonText(ButtonTypes.previous, remoteParam.CultureCode)</div>
+            </div>
+            <div class="w3-col m3">
+                <div class="w3-button w3-border w3-right w3-margin-bottom w3-light-grey" onclick="location.reload();return false;">@ResourceKey("RE.continueshopping", remoteParam.CultureCode)</div>
+                <div class="w3-button w3-border w3-right w3-margin-right w3-margin-bottom simplisity_click " s-cmd="rocketecommerce_cartsummary" s-return='.ecommerce-container' s-fields='{"systemkey":"rocketecommerce","template":"cartsummary.cshtml"}'>@ButtonIcon(ButtonTypes.refresh, remoteParam.CultureCode)</div>
+            </div>
+        </div>
+
+        @{
+            var payList = portalShop.GetPaymentMethods();
+        }
+
+    <div class="w3-row w3-padding">
+        <div class="w3-col m6 w3-padding">
+            @foreach (var p in payList)
+            {
+                if (p.InterfaceKey == "manualpay")
+                {
+                    <div class="w3-col m12 w3-button w3-grey simplisity_click  w3-large" s-cmd="rocketecommerce_cartpayment" s-return="document" s-post="#datasection" s-fields='{"providerkey":"@(p.InterfaceKey)","systemkey":"rocketecommerce"}'>
+                        <i class="fa fa-money-bill-wave"></i>&nbsp;@ResourceKey("RE." + p.InterfaceKey, remoteParam.CultureCode)
+                    </div>
+                    <p>
+                        @notificationLimpet.Message_ManualPaymentButton
+                    </p>
+                }
+            }
+        </div>
+        <div class="w3-col m6 w3-padding">
+            @{
+                var showpayment = false;
+            }
+            @foreach (var p in payList)
+            {
+                if (p.InterfaceKey != "manualpay")
+                {
+
+                    <div class="w3-col m12 w3-button w3-green simplisity_click w3-large" s-cmd="rocketecommerce_cartpayment" s-return="document" s-post="#datasection" s-fields='{"providerkey":"@(p.InterfaceKey)","systemkey":"rocketecommerce"}'>
+                        <i class="fa fa-university"></i>&nbsp;@ResourceKey("RE.bankpayment", remoteParam.CultureCode)
+                    </div>
+                    showpayment = true;
+                }
+            }
+            @if (showpayment)
+            {
+                <p>
+                    @notificationLimpet.Message_BankPaymentButton
+                </p>
+            }
+        </div>
+
+    </div>
+
+    </div>
+
+</div>
+
+<script>
+    jQuery(document).ready(function () {
+
+    });
+</script>
+
+
+

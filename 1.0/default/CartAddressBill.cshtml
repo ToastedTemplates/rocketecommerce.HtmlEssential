@@ -1,0 +1,129 @@
+@inherits RocketEcommerce.Components.RocketEcommerceTokens<Simplisity.SimplisityRazor>
+@using DNNrocketAPI;
+@using Simplisity;
+@using RocketEcommerce.Components;
+@using DNNrocketAPI.Components;
+@using DNNrocket.Country.Components;
+
+@AddProcessData("resourcepath", "/DesktopModules/RocketThemes/dnnrocketmodule/Rocket_HtmlContent/1.0/resx/")
+@AddProcessData("resourcepath", "/DesktopModules/DNNrocket/Images/App_LocalResources/")
+@AddProcessData("resourcepath", "/DesktopModules/DNNrocket/api/App_LocalResources/")
+@AddProcessData("resourcepath", "/DesktopModules/DNNrocketModules/RocketECommerce/App_LocalResources/")
+
+@{
+    var info = new SimplisityInfo();
+    var cartData = (CartLimpet)Model.List.First();
+    if (cartData.Record != null)
+    {
+        info = new SimplisityInfo(cartData.Record);
+    }
+
+    var systemInfoData = new SystemLimpet("rocketecommerce");
+    var rocketInterface = new RocketInterface(systemInfoData.Info, "settingcountry");
+    var countryData = new CountryLimpet(PortalUtils.GetPortalId(), rocketInterface);
+    var remoteParam = (RemoteLimpet)Model.GetDataObject("remoteparam");
+
+    // We need the moduleid, the first remote call will have the moduleid, subsequent call need to have the remote module passed by the s-field
+    var moduleId = Model.ModuleId;
+    var tabId = Model.TabId;
+    if (remoteParam != null)
+    {
+        moduleId = remoteParam.ModuleId;
+        tabId = remoteParam.TabId;
+    }
+    var portalShop = (PortalShopLimpet)Model.GetDataObject("portalshop");
+
+}
+
+@AddProcessData("resourcepath", "/DesktopModules/RocketThemes/rocketecommerce/" + portalShop.AppTheme.AppThemeFolder + "/" + portalShop.AppTheme.AppVersionFolder + "/resx/")
+
+<div id="datasection" class="w3-container">
+
+    <div id="billingdetails">
+
+        <div id="rocketecommerce_addressmodelbill">
+            <h3>@ResourceKey("RE.billingaddress", remoteParam.CultureCode)</h3>
+            <div class="w3-container w3-border w3-padding-32">
+
+                <div class="w3-row">
+                    <div class="w3-half w3-padding-small">
+                        <label>@ResourceKey("RE.firstname", remoteParam.CultureCode)</label>
+                        @TextBox(info, "genxml/billaddress/billfirstname", " class='w3-input w3-border shipaddress'  ", info.GetXmlProperty("genxml/textbox/firstname"))
+                    </div>
+                    <div class="w3-half w3-padding-small">
+                        <label>@ResourceKey("RE.lastname", remoteParam.CultureCode)</label>
+                        @TextBox(info, "genxml/billaddress/billlastname", " class='w3-input w3-border shipaddress'   ", info.GetXmlProperty("genxml/textbox/lastname"))
+                    </div>
+                </div>
+                <div class="w3-row">
+                    <div class="w3-half w3-padding-small">
+                        <label>@ResourceKey("RE.email", remoteParam.CultureCode)</label>
+                        @TextBox(info, "genxml/billaddress/billemail", " class='w3-input w3-border shipaddress' name='email' email  ", info.GetXmlProperty("genxml/textbox/email"))
+                    </div>
+                    <div class="w3-half w3-padding-small">
+                        <label>@ResourceKey("RE.phone", remoteParam.CultureCode)</label>
+                        @TextBox(info, "genxml/billaddress/billphone", " class='w3-input w3-border shipaddress'  ", info.GetXmlProperty("genxml/textbox/phone"))
+                    </div>
+                </div>
+
+
+                <div class="w3-row w3-padding-small">
+                    <label>@ResourceKey("RE.company", remoteParam.CultureCode)</label>
+                    @TextBox(info, "genxml/billaddress/billcompany", " class='w3-input w3-border' autocomplete='off' ")
+                </div>
+                <div class="w3-row w3-padding-small">
+                    <label>@ResourceKey("RE.address1", remoteParam.CultureCode)</label>
+                    @TextBox(info, "genxml/billaddress/billaddress1", " class='w3-input w3-border' autocomplete='off' ")
+                </div>
+                <div class="w3-row w3-padding-small">
+                    <label>@ResourceKey("RE.address2", remoteParam.CultureCode)</label>
+                    @TextBox(info, "genxml/billaddress/billaddress2", " class='w3-input w3-border' autocomplete='off' ")
+                </div>
+                <div class="w3-row">
+                    <div class="w3-half w3-padding-small">
+                        <label>@ResourceKey("RE.city", remoteParam.CultureCode)</label>
+                        @TextBox(info, "genxml/billaddress/billcity", " class='w3-input w3-border' autocomplete='off' ")
+                    </div>
+                    <div class="w3-half w3-padding-small">
+                        <label>@ResourceKey("RE.postcode", remoteParam.CultureCode)</label>
+                        @TextBox(info, "genxml/billaddress/billpostcode", " class='w3-input w3-border' autocomplete='off' ")
+                    </div>
+                </div>
+                <div class="w3-row">
+                    <div class="w3-half w3-padding-small">
+                        <label>@ResourceKey("RE.country", remoteParam.CultureCode)</label>
+                        @DropDownList(info, "genxml/billaddress/billcountry", countryData.GetSelectedDictCountries(), "class='w3-input w3-border simplisity_change' s-cmd='settingcountry_getregion' s-dropdownlist='#billregion'")
+                    </div>
+                    <div class="w3-half w3-padding-small">
+                        <label>@ResourceKey("RE.region", remoteParam.CultureCode)</label>
+                        @{
+                            var countrycode2 = info.GetXmlProperty("genxml/billaddress/billcountry");
+                            if (countrycode2 == "")
+                            {
+                                countrycode2 = countryData.GetPrimaryCountry();
+                            }
+                        }
+                        @DropDownList(info, "genxml/billaddress/billregion", countryData.RegionDictionary(countrycode2), "class='w3-input w3-border' ")
+                    </div>
+                </div>
+            </div>
+
+            <div class="w3-row w3-margin-top w3-margin-bottom">
+                <div class="w3-button w3-border w3-left w3-margin-bottom simplisity_click" s-post="#datasection" s-cmd="rocketecommerce_savecartbill" s-return='.ecommerce-container' s-fields='{"systemkey":"rocketecommerce","template":"cartaddresscontact.cshtml"}'>@ButtonText(ButtonTypes.previous, remoteParam.CultureCode)</div>
+                <div class="w3-button w3-border w3-right w3-margin-left w3-margin-bottom simplisity_click" s-post="#datasection" s-cmd="rocketecommerce_savecartbill" s-return='.ecommerce-container' s-fields='{"systemkey":"rocketecommerce","template":"cartaddressship.cshtml"}'>@ButtonText(ButtonTypes.next, remoteParam.CultureCode)</div>
+                <div class="w3-button w3-border w3-right w3-margin-bottom w3-light-grey" onclick="location.reload();return false;">@ResourceKey("RE.continueshopping", remoteParam.CultureCode)</div>
+                <div class="w3-button w3-border w3-right w3-margin-right w3-margin-bottom simplisity_click " s-cmd="rocketecommerce_cartbill" s-return='.ecommerce-container' s-fields='{"systemkey":"rocketecommerce","template":"cartaddressbill.cshtml"}'>@ButtonIcon(ButtonTypes.refresh, remoteParam.CultureCode)</div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    jQuery(document).ready(function () {
+
+    });
+</script>
+
+
+

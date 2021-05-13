@@ -1,0 +1,26 @@
+<root>
+<version>1.0.0</version>
+<websitedestrelpath>\DesktopModules\RocketThemes\rocketecommerce.HtmlEssential</websitedestrelpath>
+<websitedestbinrelpath>\bin</websitedestbinrelpath>
+  <!-- Include only files that match the regular expression -->
+<regexpr>(\.cshtml|\.html|\.resx|\.dnn|\.png|\.jpg|\.gif|\.css|\.svg|\.js|\.xml|\.txt|\.md|\.aspx|\.ascx|\.ashx|\.woff|\.woff2|\.ttf)$</regexpr>
+<directory include='false'>
+	<!-- All paths should be from the source root (project root) -->
+	<value>\.git</value>
+	<value>\.vs</value>
+	<value>\bin</value>
+	<value>\obj</value>
+	<value>\Documentation</value>
+	<value>\Installation</value>
+	<value>\packages</value>
+	<value>\render</value>
+	<value>\_external</value>
+  </directory>
+  <directory include='true'>
+    <value>\*</value>
+  </directory>
+  <file include='false'>
+  </file>
+  <file include='true'>
+  </file>
+</root>

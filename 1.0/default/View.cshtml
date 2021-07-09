@@ -87,7 +87,13 @@
                         </div>
                         <div class="productcontent">
                             <h3><a href="javascript:void(0)" onclick="showproductmodel(@(productData.ProductId))" title="@productData.Name">@productData.Name</a></h3>
-                            <div class="productprice">@productData.PriceMinimumDisplay()</div>
+                            <div class="productprice">
+                                @if (productData.GetModelList().Count > 1)
+                                {
+                                    <span class="w3-hide-small w3-tiny ">@ResourceKey("RE.from", sessionParams.CultureCode)</span>
+                                }
+
+                            @productData.PriceMinimumDisplay()</div>
                         </div>
 
                         <!-- Quick View -->
@@ -103,6 +109,11 @@
                                     <div class="quickviewcontent">
                                         <span onclick="document.getElementById('productmodelid@(productData.ProductId)').style.display='none'" class="w3-button w3-display-topright">&times;</span>
                                         <h2>@productData.Name</h2>
+                                        @if (productData.GetModelList().Count > 1)
+                                        {
+                                            <div class="w3-hide-small "><b>@ResourceKey("RE.from", sessionParams.CultureCode)</b></div>
+                                        }
+
                                         <div class="quickviewprice">@productData.PriceMinimumDisplay()</div>
                                         <div class="quickviewsummary">@BreakOf(productData.Summary)</div>
                                         <div class="quickviewmodels">

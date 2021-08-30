@@ -148,15 +148,15 @@ function addToCart(productid) {
 }
 
 function buildCartItem(productid) {
-    var qty = parseInt(jQuery('#qty' + productid).html());
-    var modelid = jQuery('#modelid' + productid).val();
+    var qty = parseInt($('#qty' + productid).html());
+    var modelid = $('#modelid' + productid).val();
     var optionlist = '';
     var optionlistvalue = '';
-    jQuery('.option' + productid).each(function (i, obj) {
-        optionlist = optionlist + jQuery(obj).attr('optionkey') + ' ';
-        controlVal = jQuery(obj).val();
+    $('.option' + productid).each(function (i, obj) {
+        optionlist = optionlist + $(obj).attr('optionkey') + ' ';
+        controlVal = $(obj).val();
         if (controlVal === '') {
-            controlVal = jQuery('input[name="optionid' + i + 'radio"]:checked').val();
+            controlVal = $('input[name="optionid' + i + 'radio"]:checked').val();
             alert(controlVal);
         }
         optionlistvalue = optionlistvalue + simplisity_encode(controlVal) + ' ';
@@ -178,27 +178,27 @@ function buildCartItem(productid) {
 
 
 function setProductQtyDisplay() {
-    jQuery('.qtyvalue').html('0');// reset all qty
-    jQuery('.optionsection').addClass("w3-display-hover");
+    $('.qtyvalue').html('0');// reset all qty
+    $('.optionsection').addClass("w3-display-hover");
 
     // reload qty value (for model selected only)
     var items = cart.getItems();
     for (var i = 0; i < items.length; i++) {
         var item = items[i];
-        var modelid = jQuery('#modelid' + item.productid).val();
+        var modelid = $('#modelid' + item.productid).val();
         var key = item.productid + '.' + modelid;
 
         if (item.key === key) {
-            jQuery('#qty' + item.productid).html(item.qty);
+            $('#qty' + item.productid).html(item.qty);
             if (item.qty > 0) {
-                jQuery('#optionsection' + item.productid).removeClass("w3-display-hover");
+                $('#optionsection' + item.productid).removeClass("w3-display-hover");
             }
         }
     }
 }
 
 
-jQuery(document).ready(function () {
+$(document).ready(function () {
 
     if (storage.getCart()) {
         // [TODO]: verify the scart products serverside

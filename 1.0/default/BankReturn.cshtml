@@ -9,15 +9,14 @@
 
 @{
     var paymentData = (PaymentLimpet)Model.List.First();
-    var remoteParam = (RemoteLimpet)Model.GetDataObject("remoteparam");
+    var sessionParams = (SessionParams)Model.SessionParamsData;
     var info = new SimplisityInfo(paymentData.Record);
-    info.Lang = remoteParam.CultureCode;
-    var portalShop = new PortalShopLimpet(PortalUtils.GetPortalId(), remoteParam.CultureCode);
-    var notificationLimpet = new NotificationLimpet(portalShop.PortalId, remoteParam.CultureCode);
+    info.Lang = sessionParams.CultureCode;
+    var portalShop = new PortalShopLimpet(PortalUtils.GetPortalId(), sessionParams.CultureCode);
+    var notificationLimpet = new NotificationLimpet(portalShop.PortalId, sessionParams.CultureCode);
     var systemData = new SystemLimpet("rocketecommerce");
-    var adminlink = portalShop.EngineUrlWithProtocol.TrimEnd('/') + "/DesktopModules/DNNrocketModules/RocketEcommerce/admin.html";
-    var companyData = new CompanyLimpet(PortalUtils.GetPortalId(), remoteParam.CultureCode);
-    var apiurl = portalShop.EngineUrlWithProtocol.TrimEnd('/') + "/Desktopmodules/dnnrocket/api/rocket/action";
+    var companyData = new CompanyLimpet(PortalUtils.GetPortalId(), sessionParams.CultureCode);
+    var orderData = new OrderLimpet(paymentData.PortalId, paymentData.OrderId, sessionParams.CultureCode);
 }
 
 <div id="datasection" class="rocketecommerce_paymentform">
@@ -69,106 +68,97 @@
             }
             else
             {
-                <div class="paymentmessage">
+        <div class="paymentmessage">
 
-                    @if (paymentData.PaymentMade || paymentData.IsPaymentCompleted)
+            @if (paymentData.PaymentMade || paymentData.IsPaymentCompleted)
+            {
+                if (paymentData.PaymentProvider.ToLower() == "manualpay")
+                {
+                    <table class="w3-table w3-bordered">
+                        <tr class="">
+                            <td>@ResourceKey("RE.amount")</td>
+                            <td>
+                                @paymentData.AmountDisplay
+                            </td>
+                        </tr>
+                    </table>
+
+                    <p>
+                        @BreakOf(notificationLimpet.Message_WaitingForPayment)
+                    </p>
+                }
+                else
+                {
+                    <table class="w3-table w3-bordered">
+                        <tr class="">
+                            <td>@ResourceKey("RE.amount")</td>
+                            <td>
+                                @paymentData.AmountDisplay
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>@ResourceKey("RE.paid")</td>
+                            <td>
+                                @paymentData.AmountPaidDisplay
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>@ResourceKey("RE.due")</td>
+                            <td>
+                                @paymentData.AmountDueDisplay
+                            </td>
+                        </tr>
+                    </table>
+
+
+                    <div class="w3-panel w3-center w3-card-4 w3-xlarge w3-round w3-padding-large w3-green">
+                        @ResourceKey("RE.orderstatus" + Convert.ToInt32(PaymentStatus.PaymentOK))
+                    </div>
+
+                    if (orderData.CollectInStore)
                     {
-                        if (paymentData.PaymentProvider.ToLower() == "manualpay")
-                        {
-                            <table class="w3-table w3-bordered">
-                                <tr class="">
-                                    <td>@ResourceKey("RE.amount")</td>
-                                    <td>
-                                        @paymentData.AmountDisplay
-                                    </td>
-                                </tr>
-                            </table>
-
-                            if (portalShop.CollectionOn)
-                            {
-                                <p>
-                                    @BreakOf(notificationLimpet.Message_StorePickUp)
-                                </p>
-                            }
-                            else
-                            {
-                                <p>
-                                    @BreakOf(notificationLimpet.Message_WaitingForPayment)
-                                </p>
-                            }
-                        }
-                        else
-                        {
-                            <table class="w3-table w3-bordered">
-                                <tr class="">
-                                    <td>@ResourceKey("RE.amount")</td>
-                                    <td>
-                                        @paymentData.AmountDisplay
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>@ResourceKey("RE.paid")</td>
-                                    <td>
-                                        @paymentData.AmountPaidDisplay
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>@ResourceKey("RE.due")</td>
-                                    <td>
-                                        @paymentData.AmountDueDisplay
-                                    </td>
-                                </tr>
-                            </table>
-
-
-                            <div class="w3-panel w3-center w3-card-4 w3-xlarge w3-round w3-padding-large w3-green">
-                                @ResourceKey("RE.orderstatus" + Convert.ToInt32(PaymentStatus.PaymentOK))
-                            </div>
-                            if (paymentData.Status == PaymentStatus.WaitingForPayment)
-                            {
-                                <p>
-                                    @BreakOf(notificationLimpet.Message_WaitingForPayment)
-                                </p>
-                            }
-                            else
-                            {
-                                <p>
-                                    @BreakOf(notificationLimpet.Message_PaymentFormOK)
-                                </p>
-                            }
-                        }
+                        <p>
+                            @BreakOf(notificationLimpet.Message_StorePickUp)
+                        </p>
+                    }
+                    if (paymentData.Status == PaymentStatus.WaitingForPayment)
+                    {
+                        <p>
+                            @BreakOf(notificationLimpet.Message_WaitingForPayment)
+                        </p>
                     }
                     else
                     {
-                        <div class="w3-panel w3-center w3-card-4 w3-xlarge w3-round w3-red w3-padding-large">
-                            @ResourceKey("RE.orderstatus" + paymentData.StatusCode)
-                        </div>
-
-                        if (paymentData.Status == PaymentStatus.PaymentFailed)
-                        {
-                            <p>
-                                @notificationLimpet.Message_PaymentFormFail
-                            </p>
-                        }
-
+                        <p>
+                            @BreakOf(notificationLimpet.Message_PaymentFormOK)
+                        </p>
                     }
 
-                </div>
+
+                }
             }
+            else
+            {
+                <div class="w3-panel w3-center w3-card-4 w3-xlarge w3-round w3-red w3-padding-large">
+                    @ResourceKey("RE.orderstatus" + paymentData.StatusCode)
+                </div>
+
+                if (paymentData.Status == PaymentStatus.PaymentFailed)
+                {
+                    <p>
+                        @notificationLimpet.Message_PaymentFormFail
+                    </p>
+                }
+
+            }
+
+        </div>
+            }
+
 
             <div class="w3-center w3-margin-top">
                 <div class="w3-bar">
-
-                    @if (portalShop.ProductListPageUrl == "")
-                    {
-                        <!--  NO paramater for "ProductListPageUrl" -->
-                        <a class="w3-button w3-border w3-grey" href="/">@ResourceKey("RE.continueshopping")</a>
-                    }
-                    else
-                    {
-                        <a class="w3-button w3-border w3-grey" href="@LocalUtils.TokenReplacementCultureCode(portalShop.ProductListPageUrl, remoteParam.CultureCode.ToLower())">@ResourceKey("RE.continueshopping")</a>
-                    }
-
+                    <a class="w3-button w3-border w3-grey" href="@(sessionParams.PageUrl)">@ResourceKey("RE.continueshopping")</a>
                 </div>
             </div>
 

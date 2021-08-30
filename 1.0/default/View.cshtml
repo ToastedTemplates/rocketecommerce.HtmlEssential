@@ -1,5 +1,4 @@
 ﻿@inherits RocketEcommerce.Components.RocketEcommerceTokens<Simplisity.SimplisityRazor>
-@using DNNrocketAPI;
 @using Simplisity;
 @using RocketEcommerce.Components;
 @using DNNrocketAPI.Components;
@@ -7,248 +6,26 @@
 @AddProcessData("resourcepath", "/DesktopModules/DNNrocket/api/App_LocalResources/")
 @AddProcessData("resourcepath", "/DesktopModules/DNNrocketModules/RocketECommerce/App_LocalResources/")
 
-@{
-    var productDataList = (ProductLimpetList)Model.GetDataObject("productlist");
-    var companyData = new CompanyLimpet(productDataList.PortalShop.PortalId, DNNrocketUtils.GetCurrentCulture());
-    var remoteParam = (RemoteLimpet)Model.GetDataObject("remoteparam");
-    var cartData = (CartLimpet)Model.GetDataObject("cartdata");
-    var sessionParams = (SessionParams)Model.GetDataObject("sessionparams");
-
-    var appThemeFolder = productDataList.PortalShop.AppTheme.AppThemeFolder;
-    var portalShop = productDataList.PortalShop;
-
-    // We need the moduleid, the first remote call will have the moduleid, subsequent call need to have the remote module passed by the s-field
-    var moduleId = Model.ModuleId;
-    var tabId = Model.TabId;
-    if (remoteParam != null)
-    {
-        moduleId = remoteParam.ModuleId;
-        tabId = remoteParam.TabId;
-    }
-}
-
-@AddProcessData("resourcepath", "/DesktopModules/RocketThemes/rocketecommerce/" + portalShop.AppTheme.AppThemeFolder + "/" + portalShop.AppTheme.AppVersionFolder + "/resx/")
-
-<div id="addtocartreturn" style="display:none;"></div>
-
 <!-- !PAGE CONTENT! -->
 <div id="ecommerce-tag" class="ecommerce-container">
 
-<div class="productlistflex ecommerce-container">
 
-    <div class="productlist">
+    @{
 
-        <div class="w3-row w3-margin-bottom searchdata">
-            <div class="w3-left">@productDataList.RecordCount @ResourceKey("RE.items", remoteParam.CultureCode)</div>
-            @{
-                var orderbyDictionary = new Dictionary<string, string>();
-                foreach (var orderbyInfo in productDataList.PortalShop.GetProductOrderByList())
-                {
-                    orderbyDictionary.Add(orderbyInfo.GetXmlProperty("genxml/key"), ResourceKey("RE." + orderbyInfo.GetXmlProperty("genxml/key"), remoteParam.CultureCode).ToString());
-                }
-                <div class="w3-right">
-                    @DropDownList(new SimplisityInfo(), "genxml/hidden/orderbyref", orderbyDictionary, "class='w3-input w3-border simplisity_sessionfield simplisity_change '  s-return='.ecommerce-container' s-sessionfield='#searchtext,#pagesize,#orderbyref' s-cmd='rocketecommerce_productlist' s-post='.searchdata' s-return='#simplisitymodulewrapper" + moduleId + "' s-fields='{\"systemkey\":\"rocketecommerce\",\"template\":\"view.cshtml\"}'", "")
-                </div>
-            }
-        </div>
+        var sessionParams = (SessionParams)Model.SessionParamsData;
 
-        <div id="datasection">
+        PortalShopLimpet portalShop = null;
+        var productDataList = (ProductLimpetList)Model.GetDataObject("productlist");
+        portalShop = productDataList.PortalShop;
+        @RenderTemplate("ProductList.cshtml", portalShop.AppTheme, Model, true)
 
-            <div id="datalist2" class="productgrid productgrid3">
-                @{
-                    var lp1 = 0;
-                }
-                @foreach (ProductLimpet productData in productDataList.GetArticleList())
-                {
-                    lp1 += 1;
-                    var logoRelPath = productData.LogoRelPath;
-                    if (productData.LogoRelPath == "")
-                    {
-                        logoRelPath = "/DesktopModules/DNNrocket/api/images/noimage2.png";
-                    }
+        @AddProcessData("resourcepath", "/DesktopModules/RocketThemes/" + portalShop.AppTheme.AppThemeFolder + "/" + portalShop.AppTheme.AppVersionFolder + "/resx/")
 
-                    <div class="product">
-
-                        <div class="productimg">
-                            <img src="@ThumbnailImageWebsiteDomainUrl(productDataList.PortalShop.EngineUrlWithProtocol,logoRelPath,300,300)" alt="@productData.Name" />
-                            <!-- Rollover -->
-                            <div class="productrollover">
-                                <div class="productrollover-content">
-                                    <div class="productrollover-actions">
-                                        @if (productData.GetModels().Count <= 1)
-                                        {
-										<a href="javascript:void(0)" rel="nofollow" class="simplisity_click buybutton" s-before="beforebuy" s-after="afterbuy" s-return="#addtocartreturn" s-cmd="rocketecommerce_addtocart" s-post="#productdatasection@(productData.ProductId)" s-fields='{"productid":"@productData.ProductId"}'>@ResourceKey("RE.addtobasket", remoteParam.CultureCode)</a>
-                                        <span>/</span>
-										}
-                                        <a href="javascript:void(0)" onclick="showproductmodel(@(productData.ProductId))" title="@productData.Name">@ResourceKey("RE.details", remoteParam.CultureCode)</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="productcontent">
-                            <h3><a href="javascript:void(0)" onclick="showproductmodel(@(productData.ProductId))" title="@productData.Name">@productData.Name</a></h3>
-                            <div class="productprice">
-                                @if (productData.GetModelList().Count > 1)
-                                {
-                                    <span class="w3-hide-small w3-tiny ">@ResourceKey("RE.from", sessionParams.CultureCode)</span>
-                                }
-
-                            @productData.PriceMinimumDisplay()</div>
-                        </div>
-
-                        <!-- Quick View -->
-                        <div id="productmodelid@(productData.ProductId)" class="w3-modal">
-                            <div class="w3-modal-content w3-animate-bottom w3-card-4 productdatasection" id="productdatasection@(productData.ProductId)">
-
-                                <div class="productquickview">
-
-                                    <div class="quickviewimage">
-                                        <img src="@ThumbnailImageWebsiteDomainUrl(productDataList.PortalShop.EngineUrlWithProtocol,logoRelPath,400,0)" alt="@productData.Name" />
-                                    </div>
-
-                                    <div class="quickviewcontent">
-                                        <span onclick="document.getElementById('productmodelid@(productData.ProductId)').style.display='none'" class="w3-button w3-display-topright">&times;</span>
-                                        <h2>@productData.Name</h2>
-                                        @if (productData.GetModelList().Count > 1)
-                                        {
-                                            <div class="w3-hide-small "><b>@ResourceKey("RE.from", sessionParams.CultureCode)</b></div>
-                                        }
-
-                                        <div class="quickviewprice">@productData.PriceMinimumDisplay()</div>
-                                        <div class="quickviewsummary">@BreakOf(productData.Summary)</div>
-                                        <div class="quickviewmodels">
-                                            @{
-											  var displaymodels = "displaymodels";
-											}
-											@if (productData.GetModels().Count > 1)
-                                            {
-											  displaymodels = "";
-											}
-											<div id="modelinput@(productData.ProductId)" class="w3-border w3-white w3-margin-bottom modelinput @displaymodels">@ModelDropdown(productData)</div>
-                                            <div id="optionsinput@(productData.ProductId)" class="w3-white w3-margin-bottom modelinput">@OptionsInput(productData)</div>
-                                        </div>
-                                            
-
-                                        <div id="qtyinput@(productData.ProductId)" class="quickviewactions">
-                                            <div class="quickviewqty">
-                                                <div class="w3-bar">
-                                                    <div class="w3-bar-item w3-border w3-col w3-center w3-button product-subtract" productid="@(productData.ProductId)">&minus;</div>
-                                                    <input class="w3-bar-item w3-col w3-input w3-border-top w3-border-bottom w3-center qtyvalue" id="qty@(productData.ProductId)" s-xpath="genxml/textbox/qty" value="1" style="width:60px;" />
-                                                    <div class="w3-bar-item w3-border w3-col w3-center w3-button product-plus" productid="@(productData.ProductId)">&plus;</div>
-                                                </div>
-                                            </div>
-                                            <div class="quickviewbuy">
-                                                <a href="javascript:void(0)" rel="nofollow" class="w3-button simplisity_click buybutton" s-before="beforebuy" s-after="afterbuy" s-return="#addtocartreturn" s-cmd="rocketecommerce_addtocart" s-post="#productdatasection@(productData.ProductId)" s-fields='{"productid":"@productData.ProductId"}' title="@ResourceKey("RE.addtobasket", remoteParam.CultureCode)" style="width:60px;"><i class="fa fa-shopping-cart"></i></a>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                </div>
-
-                            </div>
-                        </div>
-
-                    </div>
-                }
-            </div>
-
-            @RenderTemplate("ProductPaging.cshtml", "\\DesktopModules\\RocketThemes\\rocketecommerce", appThemeFolder, Model, "1.0", true)
-
-        </div>
-
-    </div>
-
-    <div class="productlistcart">
-        <!-- Cart -->
-        <h3>@ResourceKey("RE.cart", remoteParam.CultureCode)</h3>
-        <div id="minicartdisplay"></div>
-    </div>
-
-</div>
+    }
 
 </div>
 
 <script>
-
-    jQuery(document).ready(function () {
-
-        jQuery('.clearsearch').unbind("click");
-        jQuery('.clearsearch').click(function () {
-            jQuery('#searchtext').val('');
-            jQuery('.dosearch').trigger('click');
-            return false; // prevent the button click from happening
-        });
-
-        if (jQuery('#searchtext').val() !== '') {
-            jQuery('.dosearch').hide();
-            jQuery('.clearsearch').show();
-        }
-
-        jQuery('.actionentrykey').unbind('keypress');
-        jQuery('.actionentrykey').on('keypress', function (e) {
-            if (e.keyCode == 13) {
-                jQuery('.dosearch').trigger('click');
-                return false; // prevent the button click from happening
-            }
-        });
-
-        jQuery('.actionentrykey').focus();
-
-        // move cursor to end of line
-        var tmpStr = jQuery('.actionentrykey').val();
-        jQuery('.actionentrykey').val('');
-        jQuery('.actionentrykey').val(tmpStr);
-
-        //  change color of panel, s we show it has a selection
-        if (tmpStr != '') {
-            jQuery('#searchtext').addClass('w3-border-red');
-        }
-
-        //jQuery('.ecommerce-container').show();
-        //scroll(0, 0);
-
-
-        // CART EVENTS
-        jQuery('.product-subtract').unbind("click");
-        jQuery('.product-subtract').click(function () {
-            updateQty(jQuery(this).attr("productid"), -1)
-            return false; // prevent the button click from happening
-        });
-        jQuery('.product-plus').unbind("click");
-        jQuery('.product-plus').click(function () {
-            updateQty(jQuery(this).attr("productid"), 1)
-            return false; // prevent the button click from happening
-        });
-
-        // update the cart display.
-        // If this is a remote module, it will NOT know the "browserid" and therefore we need to call the cart update from the browser.
-        // When we call it on page load, we pass the browserid, through simplisityJS.  This allows us to get the cart data.
-        // After the call return, we activate the simplisity panel, to make the page work correctly.
-        //sendRemoteParams@(moduleId)(); // we must set the remote data before the call.
-        jQuery('#minicartdisplay').getSimplisity('@(productDataList.PortalShop.EngineUrlWithProtocol)/Desktopmodules/dnnrocket/api/rocket/action', 'rocketecommerce_minicart', '{"systemkey":"rocketecommerce","template":"minicart.cshtml"}', "activatesimplisitypanel");
-
+    $(document).ready(function () {
     });
-
-    function updateQty(productid, addvalue) {
-        var qty = parseInt(jQuery('#qty' + productid).val());
-        var newqty = qty + addvalue;
-        if (newqty < 1) newqty = 1;
-        jQuery('#qty' + productid).val(newqty);
-    }
-
-        function beforebuy() {
-                jQuery('.w3-modal').hide();
-        }
-        function afterbuy() {
-            jQuery('#minicartdisplay').getSimplisity('@(productDataList.PortalShop.EngineUrlWithProtocol)/Desktopmodules/dnnrocket/api/rocket/action', 'rocketecommerce_minicart', '{"systemkey":"rocketecommerce","template":"minicart.cshtml"}', "activatesimplisitypanel");
-        }
-        function showproductmodel(productid) {
-            jQuery('#qty' + productid).val('1');
-            document.getElementById('productmodelid' + productid).style.display='block'
-        }
-        function activatesimplisitypanel() {
-            jQuery('.ecommerce-container').activateSimplisityPanel('@(productDataList.PortalShop.EngineUrlWithProtocol)/Desktopmodules/dnnrocket/api/rocket/action')
-        }
-
-
 </script>

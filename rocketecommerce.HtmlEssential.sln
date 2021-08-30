@@ -1,0 +1,75 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31205.134
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "rocketecommerce.HtmlEssential", "rocketecommerce.HtmlEssential.csproj", "{8E7BA5DA-43AA-4952-AC0F-88E4506F4054}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DNNrocketAPI", "..\..\DNNrocket\API\DNNrocketAPI.csproj", "{2200F6C3-7D4B-4CDF-908F-DCA37ADFB121}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RocketEcommerce", "..\..\DNNrocketModules\RocketEcommerce\RocketEcommerce.csproj", "{2A5C1484-4993-4D1B-A568-DF2F5E75BD0F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Simplisity", "..\..\DNNrocket\Simplisity\Simplisity.csproj", "{726C0CED-B9A1-4045-9ABB-ABA8298FF237}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{5D033F10-363B-49CD-8C84-E2F2E0ECC2AA}"
+	ProjectSection(SolutionItems) = preProject
+		..\..\dnnpack.config = ..\..\dnnpack.config
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Comp All|Any CPU = Comp All|Any CPU
+		CompAll|Any CPU = CompAll|Any CPU
+		Debug|Any CPU = Debug|Any CPU
+		Razor|Any CPU = Razor|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8E7BA5DA-43AA-4952-AC0F-88E4506F4054}.Comp All|Any CPU.ActiveCfg = Debug|Any CPU
+		{8E7BA5DA-43AA-4952-AC0F-88E4506F4054}.Comp All|Any CPU.Build.0 = Debug|Any CPU
+		{8E7BA5DA-43AA-4952-AC0F-88E4506F4054}.CompAll|Any CPU.ActiveCfg = Debug|Any CPU
+		{8E7BA5DA-43AA-4952-AC0F-88E4506F4054}.CompAll|Any CPU.Build.0 = Debug|Any CPU
+		{8E7BA5DA-43AA-4952-AC0F-88E4506F4054}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8E7BA5DA-43AA-4952-AC0F-88E4506F4054}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8E7BA5DA-43AA-4952-AC0F-88E4506F4054}.Razor|Any CPU.ActiveCfg = Release|Any CPU
+		{8E7BA5DA-43AA-4952-AC0F-88E4506F4054}.Razor|Any CPU.Build.0 = Release|Any CPU
+		{8E7BA5DA-43AA-4952-AC0F-88E4506F4054}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8E7BA5DA-43AA-4952-AC0F-88E4506F4054}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2200F6C3-7D4B-4CDF-908F-DCA37ADFB121}.Comp All|Any CPU.ActiveCfg = Comp All|Any CPU
+		{2200F6C3-7D4B-4CDF-908F-DCA37ADFB121}.Comp All|Any CPU.Build.0 = Comp All|Any CPU
+		{2200F6C3-7D4B-4CDF-908F-DCA37ADFB121}.CompAll|Any CPU.ActiveCfg = CompAll|Any CPU
+		{2200F6C3-7D4B-4CDF-908F-DCA37ADFB121}.CompAll|Any CPU.Build.0 = CompAll|Any CPU
+		{2200F6C3-7D4B-4CDF-908F-DCA37ADFB121}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2200F6C3-7D4B-4CDF-908F-DCA37ADFB121}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2200F6C3-7D4B-4CDF-908F-DCA37ADFB121}.Razor|Any CPU.ActiveCfg = Razor|Any CPU
+		{2200F6C3-7D4B-4CDF-908F-DCA37ADFB121}.Razor|Any CPU.Build.0 = Razor|Any CPU
+		{2200F6C3-7D4B-4CDF-908F-DCA37ADFB121}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2200F6C3-7D4B-4CDF-908F-DCA37ADFB121}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2A5C1484-4993-4D1B-A568-DF2F5E75BD0F}.Comp All|Any CPU.ActiveCfg = Comp All|Any CPU
+		{2A5C1484-4993-4D1B-A568-DF2F5E75BD0F}.Comp All|Any CPU.Build.0 = Comp All|Any CPU
+		{2A5C1484-4993-4D1B-A568-DF2F5E75BD0F}.CompAll|Any CPU.ActiveCfg = CompAll|Any CPU
+		{2A5C1484-4993-4D1B-A568-DF2F5E75BD0F}.CompAll|Any CPU.Build.0 = CompAll|Any CPU
+		{2A5C1484-4993-4D1B-A568-DF2F5E75BD0F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2A5C1484-4993-4D1B-A568-DF2F5E75BD0F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2A5C1484-4993-4D1B-A568-DF2F5E75BD0F}.Razor|Any CPU.ActiveCfg = Razor|Any CPU
+		{2A5C1484-4993-4D1B-A568-DF2F5E75BD0F}.Razor|Any CPU.Build.0 = Razor|Any CPU
+		{2A5C1484-4993-4D1B-A568-DF2F5E75BD0F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2A5C1484-4993-4D1B-A568-DF2F5E75BD0F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{726C0CED-B9A1-4045-9ABB-ABA8298FF237}.Comp All|Any CPU.ActiveCfg = Comp All|Any CPU
+		{726C0CED-B9A1-4045-9ABB-ABA8298FF237}.Comp All|Any CPU.Build.0 = Comp All|Any CPU
+		{726C0CED-B9A1-4045-9ABB-ABA8298FF237}.CompAll|Any CPU.ActiveCfg = CompAll|Any CPU
+		{726C0CED-B9A1-4045-9ABB-ABA8298FF237}.CompAll|Any CPU.Build.0 = CompAll|Any CPU
+		{726C0CED-B9A1-4045-9ABB-ABA8298FF237}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{726C0CED-B9A1-4045-9ABB-ABA8298FF237}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{726C0CED-B9A1-4045-9ABB-ABA8298FF237}.Razor|Any CPU.ActiveCfg = Razor|Any CPU
+		{726C0CED-B9A1-4045-9ABB-ABA8298FF237}.Razor|Any CPU.Build.0 = Razor|Any CPU
+		{726C0CED-B9A1-4045-9ABB-ABA8298FF237}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{726C0CED-B9A1-4045-9ABB-ABA8298FF237}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F4E071BB-CF9E-4D46-B70C-6F203C0AA29E}
+	EndGlobalSection
+EndGlobal

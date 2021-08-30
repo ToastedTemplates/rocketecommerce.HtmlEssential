@@ -18,17 +18,8 @@
         info = new SimplisityInfo(cartData.Record);
     }
 
-    var remoteParam = (RemoteLimpet)Model.GetDataObject("remoteparam");
+    var sessionParams = (SessionParams)Model.SessionParamsData;
     var portalShop = (PortalShopLimpet)Model.GetDataObject("portalshop");
-
-    // We need the moduleid, the first remote call will have the moduleid, subsequent call need to have the remote module passed by the s-field
-    var moduleId = Model.ModuleId;
-    var tabId = Model.TabId;
-    if (remoteParam != null)
-    {
-        moduleId = remoteParam.ModuleId;
-        tabId = remoteParam.TabId;
-    }
 
 }
 
@@ -109,7 +100,7 @@
                 </div>
 
 <script>
-    jQuery(document).ready(function () {
+    $(document).ready(function () {
 
     });
 </script>

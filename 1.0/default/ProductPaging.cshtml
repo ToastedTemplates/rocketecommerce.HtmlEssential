@@ -12,12 +12,14 @@
 @{
 
     var articleDataList = (ProductLimpetList)Model.GetDataObject("productlist");
+    var sessionParams = (SessionParams)Model.SessionParamsData;
     var portalShop = articleDataList.PortalShop;
     var rowcount = articleDataList.SessionParamData.RowCount;
     var page = articleDataList.SessionParamData.Page;
     var pagesize = articleDataList.SessionParamData.PageSize;
     var pagechapter = 5;
     var lastpage = 0;
+    var catid = articleDataList.SessionParamData.GetInt("searchcategoryid");
 
     var r = (page - 1) / pagechapter;
     var BeginPage = 0;
@@ -34,17 +36,6 @@
         EndPage = Math.Min(pagechapter * (r + 1), lastpage);
     }
 
-    var remoteParam = (RemoteLimpet)Model.GetDataObject("remoteparam");
-    // We need the moduleid, the first remote call will have the moduleid, subsequent call need to have the remote module passed by the s-field
-    var moduleId = Model.ModuleId;
-    var tabId = Model.TabId;
-    if (remoteParam != null)
-    {
-        moduleId = remoteParam.ModuleId;
-        tabId = remoteParam.TabId;
-    }
-
-
 }
 
 @if (pagesize > 0 && (EndPage != BeginPage))
@@ -54,10 +45,10 @@
         <div class="w3-bar">
             @if (BeginPage != 1)
             {
-                <a href="@LocalUtils.TokenReplacementCultureCode(portalShop.ProductListPageUrl, remoteParam.CultureCode.ToLower())?page=1&pagesize=@(pagesize)" class="w3-button w3-hover-theme simplisity_click" s-cmd="rocketecommerce_productlist" s-return='.ecommerce-container' s-post=".searchdata" s-fields='{"page":"1","stopanimate":"true","systemkey":"rocketecommerce","template":"view.cshtml"}'>|❮</a>
+                <a href="@LocalUtils.TokenReplacementCultureCode(portalShop.ProductListPageUrl, sessionParams.CultureCode.ToLower())?page=1&pagesize=@(pagesize)" class="w3-button w3-hover-grey simplisity_click" s-cmd="rocketecommerce_productlist" s-return='.ecommerce-container' s-post=".searchdata" s-fields='{"page":"1","stopanimate":"true","systemkey":"rocketecommerce","template":"view.cshtml"}'>|❮</a>
                 if (page >= 6)
                 {
-                    <a href="@LocalUtils.TokenReplacementCultureCode(portalShop.ProductListPageUrl, remoteParam.CultureCode.ToLower())?page=@(BeginPage - 1)&pagesize=@(pagesize)" class="w3-button w3-hover-theme simplisity_click" s-cmd="rocketecommerce_productlist" s-return='.ecommerce-container' s-post=".searchdata" s-fields='{"page":"@(BeginPage - 1)","stopanimate":"true","systemkey":"rocketecommerce","template":"view.cshtml"}'>..</a>
+                    <a href="@LocalUtils.TokenReplacementCultureCode(portalShop.ProductListPageUrl, sessionParams.CultureCode.ToLower())?page=@(BeginPage - 1)&pagesize=@(pagesize)" class="w3-button w3-hover-grey simplisity_click" s-cmd="rocketecommerce_productlist" s-return='.ecommerce-container' s-post=".searchdata" s-fields='{"page":"@(BeginPage - 1)","stopanimate":"true","systemkey":"rocketecommerce","template":"view.cshtml"}'>..</a>
                 }
             }
 
@@ -66,11 +57,11 @@
                 var selected = "";
                 if (i == page)
                 {
-                    selected = "w3-theme";
+                    selected = "w3-grey";
                 }
                 if (i <= lastpage)
                 {
-                    <a href="@LocalUtils.TokenReplacementCultureCode(portalShop.ProductListPageUrl, remoteParam.CultureCode.ToLower())?page=@(i)&pagesize=@(pagesize)" class='w3-button w3-hover-theme @selected simplisity_click' s-cmd="rocketecommerce_productlist"  s-return='.ecommerce-container' s-post=".searchdata" s-fields='{"page":"@i","stopanimate":"true","systemkey":"rocketecommerce","template":"view.cshtml"}'>@i</a>
+                    <a href="@LocalUtils.TokenReplacementCultureCode(portalShop.ProductListPageUrl, sessionParams.CultureCode.ToLower()))?page=@(i)&pagesize=@(pagesize)" class='w3-button w3-hover-grey @selected simplisity_click' s-cmd="rocketecommerce_productlist"  s-return='.ecommerce-container' s-post=".searchdata" s-fields='{"page":"@i","stopanimate":"true","systemkey":"rocketecommerce","template":"view.cshtml"}'>@i</a>
                 }
             }
 
@@ -78,9 +69,9 @@
             {
                 if (EndPage != lastpage)
                 {
-                    <a href="@LocalUtils.TokenReplacementCultureCode(portalShop.ProductListPageUrl, remoteParam.CultureCode.ToLower())?page=@(EndPage + 1)&pagesize=@(pagesize)" class="w3-button w3-hover-theme simplisity_click" onclick="return false;" s-cmd="rocketecommerce_productlist" s-return='.ecommerce-container' s-post=".searchdata" s-fields='{"page":"@(EndPage + 1)","stopanimate":"true","systemkey":"rocketecommerce","template":"view.cshtml"}'>..</a>
+                    <a href="@LocalUtils.TokenReplacementCultureCode(portalShop.ProductListPageUrl, sessionParams.CultureCode.ToLower())?page=@(EndPage + 1)&pagesize=@(pagesize)" class="w3-button w3-hover-grey simplisity_click" onclick="return false;" s-cmd="rocketecommerce_productlist" s-return='.ecommerce-container' s-post=".searchdata" s-fields='{"page":"@(EndPage + 1)","stopanimate":"true","systemkey":"rocketecommerce","template":"view.cshtml"}'>..</a>
                 }
-                    <a href="@LocalUtils.TokenReplacementCultureCode(portalShop.ProductListPageUrl, remoteParam.CultureCode.ToLower())?page=@(lastpage)&pagesize=8" class="w3-button w3-hover-theme simplisity_click" onclick="return false;" s-cmd="rocketecommerce_productlist" s-return='.ecommerce-container' s-post=".searchdata" s-fields='{"page":"@lastpage","stopanimate":"true","systemkey":"rocketecommerce","template":"view.cshtml"}'>❯|</a>
+                    <a href="@LocalUtils.TokenReplacementCultureCode(portalShop.ProductListPageUrl, sessionParams.CultureCode.ToLower())?page=@(lastpage)&pagesize=8" class="w3-button w3-hover-grey simplisity_click" onclick="return false;" s-cmd="rocketecommerce_productlist" s-return='.ecommerce-container' s-post=".searchdata" s-fields='{"page":"@lastpage","stopanimate":"true","systemkey":"rocketecommerce","template":"view.cshtml"}'>❯|</a>
             }
 
         </div>
@@ -90,7 +81,7 @@
 
 <script>
 
-    jQuery(document).ready(function () {
+    $(document).ready(function () {
 
 
     });

@@ -18,6 +18,7 @@
 
     var portalData = new PortalLimpet(PortalUtils.GetCurrentPortalId());
     var remoteModule = (RemoteModule)Model.GetDataObject("remotemodule");
+    var appTheme = (AppThemeLimpet)Model.GetDataObject("apptheme");
 
     var categoryData = new CategoryLimpet(portalShop.PortalId, sessionParams.GetInt("searchcategoryid"), sessionParams.CultureCode);
 
@@ -72,13 +73,13 @@
                                         }
                                         @if (modellistcount == 1 && optionlistcount == 0)
                                         {
-                                            <a href="javascript:void(0);" rel="nofollow" class="simplisity_click buybutton" s-return="#minicartdisplay" s-cmd="rocketecommerce_addtocart" s-fields='{"productid":"@productData.ProductId"}'>@ResourceKey("RE.addtobasket", sessionParams.CultureCode)</a>
+                                            <a href="javascript:void(0);" onclick="addproducttocart('@productData.ProductId');" rel="nofollow" class="buybutton">@ResourceKey("RE.addtobasket", sessionParams.CultureCode)</a>
                                         }
                                         @if (modellistcount == 1 && optionlistcount == 0 && portalShop.ProductDetailPageUrl != "")
                                         {
                                             <span>/</span>
                                         }
-                                        <a href="javascript:void(0)" onclick="showproductmodel(@(productData.ProductId))" title="@productData.Name">@ResourceKey("RE.details", sessionParams.CultureCode)</a>
+                                        <a href="javascript:void(0);" onclick="showproductmodel(@(productData.ProductId))" title="@productData.Name">@ResourceKey("RE.details", sessionParams.CultureCode)</a>
 
                                     </div>
                                 </div>
@@ -179,7 +180,7 @@
                                             </div>
                                         </div>
                                         <div class="quickviewbuy">
-                                            <a href="javascript:void(0)" rel="nofollow" class="w3-button simplisity_click buybutton" s-before="beforebuy" s-after="afterbuy" s-return="#minicartdisplay" s-cmd="rocketecommerce_addtocart" s-post="#productdatasection@(productData.ProductId)" s-fields='{"productid":"@productData.ProductId"}' title="@ResourceKey("RE.addtobasket", sessionParams.CultureCode)" style="width:60px;">@MaterialIcon("shopping_cart")</a>
+                                            <a href="javascript:void(0);" onclick="addproducttocart('@(productData.ProductId)', '#productdatasection@(productData.ProductId)');" rel="nofollow" class="w3-button buybutton" title="@ResourceKey("RE.addtobasket", sessionParams.CultureCode)" style="width:60px;">@MaterialIcon("shopping_cart")</a>
                                         </div>
                                     </div>
 
@@ -194,7 +195,7 @@
                 }
             </div>
 
-            @RenderTemplate("ProductPaging.cshtml", productDataList.PortalShop.AppTheme, Model, true)
+            @RenderTemplate("ProductPaging.cshtml", appTheme, Model, true)
 
         </div>
 
@@ -204,7 +205,7 @@
 
         <!-- Cart (Include design to stop flicker on the page) -->
         <div id="minicartdisplay" class="productlistcart">
-            @RenderTemplate("MiniCart.cshtml", productDataList.PortalShop.AppTheme, Model)
+            @RenderTemplate("MiniCart.cshtml", appTheme, Model)
         </div>
 
     </div>
@@ -214,7 +215,6 @@
 <script>
 
     $(document).ready(function () {
-
 
         // CART EVENTS
         $('.product-subtract').unbind("click");
@@ -234,10 +234,15 @@
             $('.imgrollovertarget').attr('popupsrc', $(this).attr('popupsrc'));
         });
 
-        simplisitypanelecommercetag();
+        //simplisitypanelecommercetag();
 
         firstLoadMove();
     });
+
+    function addproducttocart(productid, spost) {
+        $('#productmodelid' + productid).hide();
+        $('#minicartdisplay').getSimplisity('@(sessionParams.ApiUrl)', 'rocketecommerce_addtocart', '{"template":"MiniCart.cshtml","productid":"' + productid + '","dataref":"@(remoteModule.DataRef)"}', '', spost)
+    }
 
     function showproductmodel(productid) {
         jQuery('#qty' + productid).val('1');

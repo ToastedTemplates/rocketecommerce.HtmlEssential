@@ -3,11 +3,14 @@
 @using Simplisity;
 @using RocketEcommerce.Components;
 @using DNNrocketAPI.Components;
+@using RocketPortal.Components;
 
 @{
     var portalShop = (PortalShopLimpet)Model.List.First();
     var productData = (ProductLimpet)Model.GetDataObject("productdata");
     var sessionParams = (SessionParams)Model.SessionParamsData;
+    var portalData = new PortalLimpet(PortalUtils.GetCurrentPortalId());
+    var remoteModule = (RemoteModule)Model.GetDataObject("remotemodule");
 }
 
 @if (productData != null)
@@ -26,7 +29,7 @@
         "@@context" : "http://schema.org",
         "@@type" : "Product",
         "name" : "@(productData.Name.Replace("\"", ""))",
-        "image" : "@(portalShop.EngineUrlWithProtocol)@(productImg)",
+        "image" : "@(portalData.EngineUrlWithProtocol)@(productImg)",
         "description" : "@(productData.Summary.Replace("\"", ""))",
         "url" : "@productData.UrlTokens(portalShop.ProductDetailPageUrl)",
         "brand" : {
@@ -45,7 +48,7 @@
 
 <link rel="stylesheet" href="@(sessionParams.EngineURL)@DNNrocketUtils.AppendFileModifiedDate("/DesktopModules/DNNrocket/css/w3.css")">
 
-<link rel="stylesheet" href="@(sessionParams.EngineURL)@DNNrocketUtils.AppendFileModifiedDate("/DesktopModules/DNNrocket/API/Themes/config-w3/1.0/css/" + portalShop.ColorFrontTheme)">
+<link rel="stylesheet" href="@(sessionParams.EngineURL)@DNNrocketUtils.AppendFileModifiedDate("/DesktopModules/DNNrocket/API/Themes/config-w3/1.0/css/" + portalData.ColorFrontTheme)">
 <script type="text/javascript" src="@(sessionParams.EngineURL)@DNNrocketUtils.AppendFileModifiedDate("/DesktopModules/DNNrocket/Simplisity/js/simplisity.js")"></script>
 <script type="text/javascript" src="@(sessionParams.EngineURL)@DNNrocketUtils.AppendFileModifiedDate("/DesktopModules/RocketThemes/" + portalShop.AppTheme.AppThemeFolder + "/" + portalShop.AppTheme.AppVersionFolder + "/js/frontend.js")"></script>
 <link rel="stylesheet" href="@(sessionParams.EngineURL)@DNNrocketUtils.AppendFileModifiedDate("/DesktopModules/RocketThemes/" + portalShop.AppTheme.AppThemeFolder + "/" + portalShop.AppTheme.AppVersionFolder + "/css/theme.css")">

@@ -2,18 +2,22 @@
 @using Simplisity;
 @using RocketEcommerce.Components;
 @using DNNrocketAPI.Components;
+@using RocketPortal.Components;
 
 @AddProcessData("resourcepath", "/DesktopModules/DNNrocket/api/App_LocalResources/")
 @AddProcessData("resourcepath", "/DesktopModules/DNNrocketModules/RocketECommerce/App_LocalResources/")
 
 @{
     var productDataList = (ProductLimpetList)Model.GetDataObject("productlist");
-    var companyData = (CompanyLimpet)Model.GetDataObject("companydata");;
+    var companyData = (CompanyLimpet)Model.GetDataObject("companydata"); ;
     var cartData = (CartLimpet)Model.GetDataObject("cartdata");
     var sessionParams = (SessionParams)Model.SessionParamsData;
 
     var appThemeFolder = productDataList.PortalShop.AppTheme.AppThemeFolder;
     var portalShop = productDataList.PortalShop;
+
+    var portalData = new PortalLimpet(PortalUtils.GetCurrentPortalId());
+    var remoteModule = (RemoteModule)Model.GetDataObject("remotemodule");
 
     var categoryData = new CategoryLimpet(portalShop.PortalId, sessionParams.GetInt("searchcategoryid"), sessionParams.CultureCode);
 
@@ -28,7 +32,7 @@
         <h1>
             @if (!categoryData.Exists)
             {
-                @portalShop.StoreName
+                @companyData.StoreName
             }
             else
             {
@@ -38,161 +42,161 @@
 
         @RenderTemplate("SearchBanner.cshtml", productDataList.PortalShop.AppTheme, Model, true)
 
-    <div id="datasection">
+        <div id="datasection">
 
-        <div id="datalist2" class="productgrid productgrid3">
-            @{
-                var lp1 = 0;
-            }
-            @foreach (ProductLimpet productData in productDataList.GetArticleList())
-            {
-                lp1 += 1;
-                var logoRelPath = productData.LogoRelPath;
-                if (productData.LogoRelPath == "")
-                {
-                    logoRelPath = "/DesktopModules/DNNrocket/api/images/noimage2.png";
+            <div id="datalist2" class="productgrid productgrid3">
+                @{
+                    var lp1 = 0;
                 }
-                var productListUrl = sessionParams.PageUrl + productData.UrlTokens(portalShop.ProductDetailPageUrl);
+                @foreach (ProductLimpet productData in productDataList.GetArticleList())
+                {
+                    lp1 += 1;
+                    var logoRelPath = productData.LogoRelPath;
+                    if (productData.LogoRelPath == "")
+                    {
+                        logoRelPath = "/DesktopModules/DNNrocket/api/images/noimage2.png";
+                    }
+                    var productListUrl = sessionParams.PageUrl + productData.UrlTokens(portalShop.ProductDetailPageUrl);
 
-                <div class="product">
+                    <div class="product">
 
-                    <div class="productimg">
-                        <img src="@ThumbnailImageWebsiteDomainUrl(productDataList.PortalShop.EngineUrlWithProtocol,logoRelPath,300,300)" alt="@productData.Name" />
-                        <!-- Rollover -->
-                        <div class="productrollover">
-                            <div class="productrollover-content">
-                                <div class="productrollover-actions">
-                                    @{
-                                        var modellistcount = productData.GetModelList().Count;
-                                        var optionlistcount = productData.GetOptionList().Count;
-                                    }
-                                    @if (modellistcount == 1 && optionlistcount == 0)
-                                    {
-                                        <a href="javascript:void(0);" rel="nofollow" class="simplisity_click buybutton" s-return="#minicartdisplay" s-cmd="rocketecommerce_addtocart" s-fields='{"productid":"@productData.ProductId"}'>@ResourceKey("RE.addtobasket", sessionParams.CultureCode)</a>
-                                    }
-                                    @if (modellistcount == 1 && optionlistcount == 0 && portalShop.ProductDetailPageUrl != "")
-                                    {
-                                        <span>/</span>
-                                    }
-                                    <a href="javascript:void(0)" onclick="showproductmodel(@(productData.ProductId))" title="@productData.Name">@ResourceKey("RE.details", sessionParams.CultureCode)</a>
-
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="productcontent">
-                        <h3>
-                            <a href="javascript:void(0)" onclick="showproductmodel(@(productData.ProductId))" title="@productData.Name">@ResourceKey("RE.details", sessionParams.CultureCode)</a>
-                        </h3>
-                        <div class="w3-row">
-                            @if (productData.SalePriceMinimum > 0)
-                            {
-                                <div class="w3-half w3-padding">
-                                    <div class="productprice" style="text-decoration:line-through;">@productData.PriceMinimumDisplay()</div>
-                                </div>
-                                <div class="w3-half w3-red w3-padding">
-                                    <div class="w3-large">@productData.SalePriceMinimumDisplay()</div>
-                                </div>
-                            }
-                            else
-                            {
-                                <div class="w3-padding">
-                                    <div class="productprice">@productData.PriceMinimumDisplay()</div>
-                                </div>
-                            }
-                        </div>
-                    </div>
-
-                </div>
-
-                <!-- Quick View -->
-                <div id="productmodelid@(productData.ProductId)" class="w3-modal">
-                    <div class="w3-modal-content w3-animate-bottom w3-card-4 productdatasection" id="productdatasection@(productData.ProductId)">
-
-                        <div class="w3-display-topright w3-button" onclick="$('#productmodelid@(productData.ProductId)').hide();">&times;</div>
-
-                        <div class="productquickview">
-
-                            <div class="quickviewimage">
-                                <img src="@ThumbnailImageWebsiteDomainUrl(productData.PortalShop.EngineUrlWithProtocol,logoRelPath,450, 450)" popupsrc="@ThumbnailImageWebsiteDomainUrl(productData.PortalShop.EngineUrlWithProtocol, logoRelPath, 800, 0)" class="imgrollovertarget" alt="@productData.Name" onclick="popupImage(this)" />
-                                @if (productData.GetImages().Count > 1)
-                                {
-                                    <div class="quickviewgallery">
+                        <div class="productimg">
+                            <img src="@ThumbnailImageWebsiteDomainUrl(portalData.EngineUrlWithProtocol,logoRelPath,300,300)" alt="@productData.Name" />
+                            <!-- Rollover -->
+                            <div class="productrollover">
+                                <div class="productrollover-content">
+                                    <div class="productrollover-actions">
                                         @{
-                                            var imgLp = 1;
+                                            var modellistcount = productData.GetModelList().Count;
+                                            var optionlistcount = productData.GetOptionList().Count;
                                         }
-                                        @foreach (var i in productData.GetImages())
+                                        @if (modellistcount == 1 && optionlistcount == 0)
                                         {
-                                            if (imgLp <= 5)
-                                            {
-                                                <img src="@ThumbnailImageWebsiteDomainUrl(productData.PortalShop.EngineUrlWithProtocol, i.RelPath, 450, 450)" popupsrc="@ThumbnailImageWebsiteDomainUrl(productData.PortalShop.EngineUrlWithProtocol, i.RelPath, 800, 0)" class="imgrollover" />
-                                            }
-                                            imgLp += 1;
+                                            <a href="javascript:void(0);" rel="nofollow" class="simplisity_click buybutton" s-return="#minicartdisplay" s-cmd="rocketecommerce_addtocart" s-fields='{"productid":"@productData.ProductId"}'>@ResourceKey("RE.addtobasket", sessionParams.CultureCode)</a>
                                         }
+                                        @if (modellistcount == 1 && optionlistcount == 0 && portalShop.ProductDetailPageUrl != "")
+                                        {
+                                            <span>/</span>
+                                        }
+                                        <a href="javascript:void(0)" onclick="showproductmodel(@(productData.ProductId))" title="@productData.Name">@ResourceKey("RE.details", sessionParams.CultureCode)</a>
+
                                     </div>
-                                }
+                                </div>
                             </div>
-
-                            <div class="quickviewcontent">
-
-                                @if (productData.GetModelList().Count > 1)
-                                {
-                                    <div class="w3-hide-small "><b>@ResourceKey("RE.from", sessionParams.CultureCode)</b></div>
-                                }
-
+                        </div>
+                        <div class="productcontent">
+                            <h3>
+                                <a href="javascript:void(0)" onclick="showproductmodel(@(productData.ProductId))" title="@productData.Name">@ResourceKey("RE.details", sessionParams.CultureCode)</a>
+                            </h3>
+                            <div class="w3-row">
                                 @if (productData.SalePriceMinimum > 0)
                                 {
-                                    <div class="quickviewprice">
-                                        <span>&nbsp;@productData.SalePriceMinimumDisplay()</span>
-                                        <span style="text-decoration:line-through;" class="w3-small">@productData.PriceMinimumDisplay()</span>
+                                    <div class="w3-half w3-padding">
+                                        <div class="productprice" style="text-decoration:line-through;">@productData.PriceMinimumDisplay()</div>
+                                    </div>
+                                    <div class="w3-half w3-red w3-padding">
+                                        <div class="w3-large">@productData.SalePriceMinimumDisplay()</div>
                                     </div>
                                 }
                                 else
                                 {
-                                    <div class="quickviewprice">
-                                        @productData.PriceMinimumDisplay()
+                                    <div class="w3-padding">
+                                        <div class="productprice">@productData.PriceMinimumDisplay()</div>
                                     </div>
                                 }
-                                <div class="quickviewsummary">@BreakOf(productData.Summary)</div>
-                                <div class="quickviewmodels">
-                                    @{
-                                        var displaymodels = "displaymodels";
-                                    }
-                                    @if (productData.GetModels().Count > 1)
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Quick View -->
+                    <div id="productmodelid@(productData.ProductId)" class="w3-modal">
+                        <div class="w3-modal-content w3-animate-bottom w3-card-4 productdatasection" id="productdatasection@(productData.ProductId)">
+
+                            <div class="w3-display-topright w3-button" onclick="$('#productmodelid@(productData.ProductId)').hide();">&times;</div>
+
+                            <div class="productquickview">
+
+                                <div class="quickviewimage">
+                                    <img src="@ThumbnailImageWebsiteDomainUrl(portalData.EngineUrlWithProtocol,logoRelPath,450, 450)" popupsrc="@ThumbnailImageWebsiteDomainUrl(portalData.EngineUrlWithProtocol, logoRelPath, 800, 0)" class="imgrollovertarget" alt="@productData.Name" onclick="popupImage(this)" />
+                                    @if (productData.GetImages().Count > 1)
                                     {
-                                        displaymodels = "";
+                                        <div class="quickviewgallery">
+                                            @{
+                                                var imgLp = 1;
+                                            }
+                                            @foreach (var i in productData.GetImages())
+                                            {
+                                                if (imgLp <= 5)
+                                                {
+                                                    <img src="@ThumbnailImageWebsiteDomainUrl(portalData.EngineUrlWithProtocol, i.RelPath, 450, 450)" popupsrc="@ThumbnailImageWebsiteDomainUrl(portalData.EngineUrlWithProtocol, i.RelPath, 800, 0)" class="imgrollover" />
+                                                }
+                                                imgLp += 1;
+                                            }
+                                        </div>
                                     }
-                                    <div id="modelinput@(productData.ProductId)" class="w3-border w3-white w3-margin-bottom modelinput @displaymodels">@ModelDropdown(productData)</div>
-                                    <div id="optionsinput@(productData.ProductId)" class="w3-white w3-margin-bottom modelinput">@OptionsInput(productData)</div>
                                 </div>
 
-                                <div id="qtyinput@(productData.ProductId)" class="quickviewactions">
-                                    <div class="quickviewqty">
-                                        <div class="w3-bar">
-                                            <div class="w3-bar-item w3-border w3-col w3-center w3-button product-subtract" productid="@(productData.ProductId)">&minus;</div>
-                                            <input class="w3-bar-item w3-col w3-input w3-border-top w3-border-bottom w3-center qtyvalue" id="qty@(productData.ProductId)" s-xpath="genxml/textbox/qty" value="1" style="width:60px;" />
-                                            <div class="w3-bar-item w3-border w3-col w3-center w3-button product-plus" productid="@(productData.ProductId)">&plus;</div>
+                                <div class="quickviewcontent">
+
+                                    @if (productData.GetModelList().Count > 1)
+                                    {
+                                        <div class="w3-hide-small "><b>@ResourceKey("RE.from", sessionParams.CultureCode)</b></div>
+                                    }
+
+                                    @if (productData.SalePriceMinimum > 0)
+                                    {
+                                        <div class="quickviewprice">
+                                            <span>&nbsp;@productData.SalePriceMinimumDisplay()</span>
+                                            <span style="text-decoration:line-through;" class="w3-small">@productData.PriceMinimumDisplay()</span>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="quickviewprice">
+                                            @productData.PriceMinimumDisplay()
+                                        </div>
+                                    }
+                                    <div class="quickviewsummary">@BreakOf(productData.Summary)</div>
+                                    <div class="quickviewmodels">
+                                        @{
+                                            var displaymodels = "displaymodels";
+                                        }
+                                        @if (productData.GetModels().Count > 1)
+                                        {
+                                            displaymodels = "";
+                                        }
+                                        <div id="modelinput@(productData.ProductId)" class="w3-border w3-white w3-margin-bottom modelinput @displaymodels">@ModelDropdown(productData)</div>
+                                        <div id="optionsinput@(productData.ProductId)" class="w3-white w3-margin-bottom modelinput">@OptionsInput(productData)</div>
+                                    </div>
+
+                                    <div id="qtyinput@(productData.ProductId)" class="quickviewactions">
+                                        <div class="quickviewqty">
+                                            <div class="w3-bar">
+                                                <div class="w3-bar-item w3-border w3-col w3-center w3-button product-subtract" productid="@(productData.ProductId)">&minus;</div>
+                                                <input class="w3-bar-item w3-col w3-input w3-border-top w3-border-bottom w3-center qtyvalue" id="qty@(productData.ProductId)" s-xpath="genxml/textbox/qty" value="1" style="width:60px;" />
+                                                <div class="w3-bar-item w3-border w3-col w3-center w3-button product-plus" productid="@(productData.ProductId)">&plus;</div>
+                                            </div>
+                                        </div>
+                                        <div class="quickviewbuy">
+                                            <a href="javascript:void(0)" rel="nofollow" class="w3-button simplisity_click buybutton" s-before="beforebuy" s-after="afterbuy" s-return="#minicartdisplay" s-cmd="rocketecommerce_addtocart" s-post="#productdatasection@(productData.ProductId)" s-fields='{"productid":"@productData.ProductId"}' title="@ResourceKey("RE.addtobasket", sessionParams.CultureCode)" style="width:60px;">@MaterialIcon("shopping_cart")</a>
                                         </div>
                                     </div>
-                                    <div class="quickviewbuy">
-                                        <a href="javascript:void(0)" rel="nofollow" class="w3-button simplisity_click buybutton" s-before="beforebuy" s-after="afterbuy" s-return="#minicartdisplay" s-cmd="rocketecommerce_addtocart" s-post="#productdatasection@(productData.ProductId)" s-fields='{"productid":"@productData.ProductId"}' title="@ResourceKey("RE.addtobasket", sessionParams.CultureCode)" style="width:60px;">@MaterialIcon("shopping_cart")</a>
-                                    </div>
+
                                 </div>
 
                             </div>
 
                         </div>
-
                     </div>
-                </div>
 
 
-            }
+                }
+            </div>
+
+            @RenderTemplate("ProductPaging.cshtml", productDataList.PortalShop.AppTheme, Model, true)
+
         </div>
-
-        @RenderTemplate("ProductPaging.cshtml", productDataList.PortalShop.AppTheme, Model, true)
-
-    </div>
 
     </div>
 

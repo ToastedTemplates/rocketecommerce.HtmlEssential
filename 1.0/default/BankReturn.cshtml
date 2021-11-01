@@ -70,24 +70,25 @@
             {
         <div class="paymentmessage">
 
-            @if (paymentData.PaymentMade || paymentData.IsPaymentCompleted)
+            @if (paymentData.PaymentProvider.ToLower() == "manualpay")
             {
-                if (paymentData.PaymentProvider.ToLower() == "manualpay")
-                {
-                    <table class="w3-table w3-bordered">
-                        <tr class="">
-                            <td>@ResourceKey("RE.amount")</td>
-                            <td>
-                                @paymentData.AmountDisplay
-                            </td>
-                        </tr>
-                    </table>
+                <table class="w3-table w3-bordered">
+                    <tr class="">
+                        <td>@ResourceKey("RE.amount")</td>
+                        <td>
+                            @paymentData.AmountDisplay
+                        </td>
+                    </tr>
+                </table>
 
-                    <p>
-                        @BreakOf(notificationLimpet.Message_WaitingForPayment)
-                    </p>
-                }
-                else
+                <p>
+                    @BreakOf(notificationLimpet.Message_WaitingForPayment)
+                </p>
+            }
+            else
+            {
+
+                if (paymentData.PaymentMade || paymentData.IsPaymentCompleted)
                 {
                     <table class="w3-table w3-bordered">
                         <tr class="">
@@ -134,22 +135,21 @@
                         </p>
                     }
 
-
                 }
-            }
-            else
-            {
-                <div class="w3-panel w3-center w3-card-4 w3-xlarge w3-round w3-red w3-padding-large">
-                    @ResourceKey("RE.orderstatus" + paymentData.StatusCode)
-                </div>
-
-                if (paymentData.Status == PaymentStatus.PaymentFailed)
+                else
                 {
-                    <p>
-                        @notificationLimpet.Message_PaymentFormFail
-                    </p>
-                }
+                    <div class="w3-panel w3-center w3-card-4 w3-xlarge w3-round w3-red w3-padding-large">
+                        @ResourceKey("RE.orderstatus" + paymentData.StatusCode)
+                    </div>
 
+                    if (paymentData.Status == PaymentStatus.PaymentFailed)
+                    {
+                        <p>
+                            @notificationLimpet.Message_PaymentFormFail
+                        </p>
+                    }
+
+                }
             }
 
         </div>

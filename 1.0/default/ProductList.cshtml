@@ -12,19 +12,14 @@
     var companyData = (CompanyLimpet)Model.GetDataObject("companydata"); ;
     var cartData = (CartLimpet)Model.GetDataObject("cartdata");
     var sessionParams = (SessionParams)Model.SessionParamsData;
-
-    var appThemeFolder = productDataList.PortalShop.AppTheme.AppThemeFolder;
     var portalShop = productDataList.PortalShop;
-
     var portalData = new PortalLimpet(PortalUtils.GetCurrentPortalId());
     var remoteModule = (RemoteModule)Model.GetDataObject("remotemodule");
     var appTheme = (AppThemeLimpet)Model.GetDataObject("apptheme");
-
     var categoryData = new CategoryLimpet(portalShop.PortalId, sessionParams.GetInt("searchcategoryid"), sessionParams.CultureCode);
-
 }
 
-@AddProcessData("resourcepath", "/DesktopModules/RocketThemes/" + portalShop.AppTheme.AppThemeFolder + "/" + portalShop.AppTheme.AppVersionFolder + "/resx/")
+@AddProcessData("resourcepath", "/DesktopModules/RocketThemes/" + remoteModule.AppThemeFolder + "/" + remoteModule.AppThemeVersion + "/resx/")
 
 <div class="productlistflex">
 

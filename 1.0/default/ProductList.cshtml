@@ -30,20 +30,7 @@
 
     <div class="productlist">
 
-        <h1>
-            @if (!categoryData.Exists)
-            {
-                @companyData.StoreName
-            }
-            else
-            {
-                @categoryData.Name
-            }
-        </h1>
-
-        @RenderTemplate("SearchBanner.cshtml", productDataList.PortalShop.AppTheme, Model, true)
-
-        <div id="datasection">
+        <div id="datasection" class="productlistdisplay">
 
             <div id="datalist2" class="productgrid productgrid3">
                 @{
@@ -87,7 +74,17 @@
                         </div>
                         <div class="productcontent">
                             <h3>
-                                <a href="javascript:void(0)" onclick="showproductmodel(@(productData.ProductId))" title="@productData.Name">@ResourceKey("RE.details", sessionParams.CultureCode)</a>
+                                <a href="javascript:void(0)" onclick="showproductmodel(@(productData.ProductId))">
+                                    @if (productData.Name.Length > 20)
+                                    {
+                                        @productData.Name.Substring(0, 20)
+                                        <span>...</span>
+                                    }
+                                    else
+                                    {
+                                        @productData.Name
+                                    }
+                                </a>
                             </h3>
                             <div class="w3-row">
                                 @if (productData.SalePriceMinimum > 0)
@@ -234,12 +231,13 @@
             $('.imgrollovertarget').attr('popupsrc', $(this).attr('popupsrc'));
         });
 
-        //simplisitypanelecommercetag();
+        $('.productlistdisplay').activateSimplisityPanel()
 
         firstLoadMove();
     });
 
     function addproducttocart(productid, spost) {
+        $('#simplisity_loader').show();
         $('#productmodelid' + productid).hide();
         $('#minicartdisplay').getSimplisity('@(sessionParams.ApiUrl)', 'rocketecommerce_addtocart', '{"template":"MiniCart.cshtml","productid":"' + productid + '","dataref":"@(remoteModule.DataRef)"}', '', spost)
     }

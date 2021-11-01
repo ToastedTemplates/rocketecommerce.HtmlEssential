@@ -20,6 +20,7 @@
     var countryData = new CountryLimpet(PortalUtils.GetPortalId());
     var sessionParams = (SessionParams)Model.SessionParamsData;
     var portalShop = (PortalShopLimpet)Model.GetDataObject("portalshop");
+    var remoteModule = (RemoteModule)Model.GetDataObject("remotemodule");
 }
 
 @AddProcessData("resourcepath", "/DesktopModules/RocketThemes/rocketecommerce/" + portalShop.AppTheme.AppThemeFolder + "/" + portalShop.AppTheme.AppVersionFolder + "/resx/")
@@ -96,10 +97,10 @@
             </div>
 
             <div class="w3-row w3-margin-top w3-margin-bottom">
-                <div class="w3-button w3-border w3-left w3-margin-bottom simplisity_click" s-post="#datasection" s-cmd="rocketecommerce_savecartbill" s-return='.ecommerce-container' s-fields='{"systemkey":"rocketecommerce","template":"cartaddresscontact.cshtml"}'>@ButtonText(ButtonTypes.previous, sessionParams.CultureCode)</div>
-                <div class="w3-button w3-border w3-right w3-margin-left w3-margin-bottom simplisity_click" s-post="#datasection" s-cmd="rocketecommerce_savecartbill" s-return='.ecommerce-container' s-fields='{"systemkey":"rocketecommerce","template":"cartaddressship.cshtml"}'>@ButtonText(ButtonTypes.next, sessionParams.CultureCode)</div>
+                <div class="w3-button w3-border w3-left w3-margin-bottom simplisity_click" s-post="#datasection" s-cmd="rocketecommerce_savecartbill" s-return='.ecommerce-container' s-fields='{"systemkey":"rocketecommerce","template":"cartaddresscontact.cshtml","dataref":"@(remoteModule.DataRef)"}'>@ButtonText(ButtonTypes.previous, sessionParams.CultureCode)</div>
+                <div class="w3-button w3-border w3-right w3-margin-left w3-margin-bottom simplisity_click" s-post="#datasection" s-cmd="rocketecommerce_savecartbill" s-return='.ecommerce-container' s-fields='{"systemkey":"rocketecommerce","template":"cartaddressship.cshtml","dataref":"@(remoteModule.DataRef)"}'>@ButtonText(ButtonTypes.next, sessionParams.CultureCode)</div>
                 <div class="w3-button w3-border w3-right w3-margin-bottom w3-light-grey" onclick="location.reload();return false;">@ResourceKey("RE.continueshopping", sessionParams.CultureCode)</div>
-                <div class="w3-button w3-border w3-right w3-margin-right w3-margin-bottom simplisity_click " s-cmd="rocketecommerce_cartbill" s-return='.ecommerce-container' s-fields='{"systemkey":"rocketecommerce","template":"cartaddressbill.cshtml"}'>@ButtonIcon(ButtonTypes.refresh, sessionParams.CultureCode)</div>
+                <div class="w3-button w3-border w3-right w3-margin-right w3-margin-bottom simplisity_click " s-cmd="rocketecommerce_cartbill" s-return='.ecommerce-container' s-fields='{"systemkey":"rocketecommerce","template":"cartaddressbill.cshtml","dataref":"@(remoteModule.DataRef)"}'>@ButtonIcon(ButtonTypes.refresh, sessionParams.CultureCode)</div>
             </div>
         </div>
 

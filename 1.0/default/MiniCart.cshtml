@@ -23,7 +23,7 @@
     <h3>@ResourceKey("RE.cart", sessionParams.CultureCode)</h3>
     <div class="w3-border-bottom w3-margin-bottom ">@(cartData.QtyCount) @ResourceKey("RE.items", sessionParams.CultureCode)</div>
     <div class="w3-margin-bottom "><strong>@(portalShop.CurrenyDisplay(cartData.SubTotal))</strong></div>
-    <a id="cartdisplay" class="w3-button w3-light-grey simplisity_click " s-cmdurl="@(sessionParams.ApiUrl)" s-return="#ecommerce-tag" s-cmd="rocketecommerce_cartlist" s-fields='{"systemkey":"rocketecommerce","template":"cartlist.cshtml","dataref":"@(remoteModule.DataRef)"}'>@MaterialIcon("shopping_cart")&nbsp;@(ResourceKey("RE.viewcart", sessionParams.CultureCode))</a>
+    <a id="cartdisplay" class="w3-button w3-light-grey simplisity_click " s-cmdurl="@(sessionParams.ApiUrl)" s-return="#ecommerce-tag" s-cmd="remote_cartlist" s-fields='{"systemkey":"rocketecommerce","template":"cartlist.cshtml","moduleref":"@(remoteModule.ModuleRef)"}'>@MaterialIcon("shopping_cart")&nbsp;@(ResourceKey("RE.viewcart", sessionParams.CultureCode))</a>
 </div>
 
 <script>

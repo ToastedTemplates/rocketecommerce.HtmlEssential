@@ -45,10 +45,10 @@
         <div class="w3-bar">
             @if (BeginPage != 1)
             {
-                <a href="@LocalUtils.TokenReplacementCultureCode(portalShop.ProductListPageUrl, sessionParams.CultureCode.ToLower())?page=1&pagesize=@(pagesize)" class="w3-button w3-hover-grey simplisity_click" s-cmd="rocketecommerce_productlist" s-return='.ecommerce-container' s-post=".searchdata" s-fields='{"page":"1","stopanimate":"true","systemkey":"rocketecommerce","template":"view.cshtml"}'>|❮</a>
+                <a href="@LocalUtils.TokenReplacementCultureCode(portalShop.ProductListPageUrl, sessionParams.CultureCode.ToLower())?page=1&pagesize=@(pagesize)" class="w3-button w3-hover-grey simplisity_click" s-cmd="remote_productlist" s-return='.ecommerce-container' s-post=".searchdata" s-fields='{"page":"1","stopanimate":"true","systemkey":"rocketecommerce","template":"view.cshtml"}'>|❮</a>
                 if (page >= 6)
                 {
-                    <a href="@LocalUtils.TokenReplacementCultureCode(portalShop.ProductListPageUrl, sessionParams.CultureCode.ToLower())?page=@(BeginPage - 1)&pagesize=@(pagesize)" class="w3-button w3-hover-grey simplisity_click" s-cmd="rocketecommerce_productlist" s-return='.ecommerce-container' s-post=".searchdata" s-fields='{"page":"@(BeginPage - 1)","stopanimate":"true","systemkey":"rocketecommerce","template":"view.cshtml"}'>..</a>
+                    <a href="@LocalUtils.TokenReplacementCultureCode(portalShop.ProductListPageUrl, sessionParams.CultureCode.ToLower())?page=@(BeginPage - 1)&pagesize=@(pagesize)" class="w3-button w3-hover-grey simplisity_click" s-cmd="remote_productlist" s-return='.ecommerce-container' s-post=".searchdata" s-fields='{"page":"@(BeginPage - 1)","stopanimate":"true","systemkey":"rocketecommerce","template":"view.cshtml"}'>..</a>
                 }
             }
 
@@ -61,7 +61,7 @@
                 }
                 if (i <= lastpage)
                 {
-                    <a href="@LocalUtils.TokenReplacementCultureCode(portalShop.ProductListPageUrl, sessionParams.CultureCode.ToLower()))?page=@(i)&pagesize=@(pagesize)" class='w3-button w3-hover-grey @selected simplisity_click' s-cmd="rocketecommerce_productlist"  s-return='.ecommerce-container' s-post=".searchdata" s-fields='{"page":"@i","stopanimate":"true","systemkey":"rocketecommerce","template":"view.cshtml"}'>@i</a>
+                    <a href="@LocalUtils.TokenReplacementCultureCode(portalShop.ProductListPageUrl, sessionParams.CultureCode.ToLower()))?page=@(i)&pagesize=@(pagesize)" class='w3-button w3-hover-grey @selected simplisity_click' s-cmd="remote_productlist"  s-return='.ecommerce-container' s-post=".searchdata" s-fields='{"page":"@i","stopanimate":"true","systemkey":"rocketecommerce","template":"view.cshtml"}'>@i</a>
                 }
             }
 
@@ -69,9 +69,9 @@
             {
                 if (EndPage != lastpage)
                 {
-                    <a href="@LocalUtils.TokenReplacementCultureCode(portalShop.ProductListPageUrl, sessionParams.CultureCode.ToLower())?page=@(EndPage + 1)&pagesize=@(pagesize)" class="w3-button w3-hover-grey simplisity_click" onclick="return false;" s-cmd="rocketecommerce_productlist" s-return='.ecommerce-container' s-post=".searchdata" s-fields='{"page":"@(EndPage + 1)","stopanimate":"true","systemkey":"rocketecommerce","template":"view.cshtml"}'>..</a>
+                    <a href="@LocalUtils.TokenReplacementCultureCode(portalShop.ProductListPageUrl, sessionParams.CultureCode.ToLower())?page=@(EndPage + 1)&pagesize=@(pagesize)" class="w3-button w3-hover-grey simplisity_click" onclick="return false;" s-cmd="remote_productlist" s-return='.ecommerce-container' s-post=".searchdata" s-fields='{"page":"@(EndPage + 1)","stopanimate":"true","systemkey":"rocketecommerce","template":"view.cshtml"}'>..</a>
                 }
-                    <a href="@LocalUtils.TokenReplacementCultureCode(portalShop.ProductListPageUrl, sessionParams.CultureCode.ToLower())?page=@(lastpage)&pagesize=8" class="w3-button w3-hover-grey simplisity_click" onclick="return false;" s-cmd="rocketecommerce_productlist" s-return='.ecommerce-container' s-post=".searchdata" s-fields='{"page":"@lastpage","stopanimate":"true","systemkey":"rocketecommerce","template":"view.cshtml"}'>❯|</a>
+                    <a href="@LocalUtils.TokenReplacementCultureCode(portalShop.ProductListPageUrl, sessionParams.CultureCode.ToLower())?page=@(lastpage)&pagesize=8" class="w3-button w3-hover-grey simplisity_click" onclick="return false;" s-cmd="remote_productlist" s-return='.ecommerce-container' s-post=".searchdata" s-fields='{"page":"@lastpage","stopanimate":"true","systemkey":"rocketecommerce","template":"view.cshtml"}'>❯|</a>
             }
 
         </div>

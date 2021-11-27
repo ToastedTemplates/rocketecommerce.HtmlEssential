@@ -19,7 +19,7 @@
     var categoryData = new CategoryLimpet(portalShop.PortalId, sessionParams.GetInt("searchcategoryid"), sessionParams.CultureCode);
 }
 
-@AddProcessData("resourcepath", "/DesktopModules/RocketThemes/" + remoteModule.AppThemeFolder + "/" + remoteModule.AppThemeVersion + "/resx/")
+@AddProcessData("resourcepath", "/DesktopModules/RocketThemes/" + remoteModule.AppThemeViewFolder + "/" + remoteModule.AppThemeViewVersion + "/resx/")
 
 <div class="productlistflex">
 
@@ -234,7 +234,7 @@
     function addproducttocart(productid, spost) {
         $('#simplisity_loader').show();
         $('#productmodelid' + productid).hide();
-        $('#minicartdisplay').getSimplisity('@(sessionParams.ApiUrl)', 'rocketecommerce_addtocart', '{"template":"MiniCart.cshtml","productid":"' + productid + '","dataref":"@(remoteModule.DataRef)"}', '', spost)
+        $('#minicartdisplay').getSimplisity('@(sessionParams.ApiUrl)', 'remote_addtocart', '{"template":"MiniCart.cshtml","productid":"' + productid + '","moduleref":"@(remoteModule.ModuleRef)"}', '', spost)
     }
 
     function showproductmodel(productid) {

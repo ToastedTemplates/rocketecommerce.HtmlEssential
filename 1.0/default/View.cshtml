@@ -1,26 +1,11 @@
 ﻿@inherits RocketEcommerce.Components.RocketEcommerceTokens<Simplisity.SimplisityRazor>
-@using Simplisity;
-@using RocketEcommerce.Components;
 @using DNNrocketAPI.Components;
-
-@AddProcessData("resourcepath", "/DesktopModules/DNNrocket/api/App_LocalResources/")
-@AddProcessData("resourcepath", "/DesktopModules/DNNrocketModules/RocketECommerce/App_LocalResources/")
 
 <!-- !PAGE CONTENT! -->
 <div id="ecommerce-tag" class="ecommerce-container">
-
-
     @{
-
-        var sessionParams = (SessionParams)Model.SessionParamsData;
-        var remoteModule = (RemoteModule)Model.GetDataObject("remotemodule");
         var appTheme = (AppThemeLimpet)Model.GetDataObject("apptheme");
-
         @RenderTemplate("ProductList.cshtml", appTheme, Model, true)
-
-        @AddProcessData("resourcepath", "/DesktopModules/RocketThemes/" + remoteModule.AppThemeViewVersion + "/" + remoteModule.AppThemeViewVersion + "/resx/")
-
     }
-
 </div>
-<div class="w3-overlay" style="z-index:999;" id="simplisity_loader"></div>
+<div class="w3-overlay simplisity_loader" style="z-index:999;"></div>

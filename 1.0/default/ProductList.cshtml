@@ -16,6 +16,7 @@
     var portalData = new PortalLimpet(PortalUtils.GetCurrentPortalId());
     var remoteModule = (RemoteModule)Model.GetDataObject("remotemodule");
     var appTheme = (AppThemeLimpet)Model.GetDataObject("apptheme");
+    var appThemeDefault = (AppThemeLimpet)Model.GetDataObject("appthemedefault");
     var categoryData = new CategoryLimpet(portalShop.PortalId, sessionParams.GetInt("searchcategoryid"), sessionParams.CultureCode);
 }
 
@@ -26,6 +27,19 @@
     <div class="productlist">
 
         <div id="datasection" class="productlistdisplay">
+
+            <h1>
+                @if (!categoryData.Exists)
+                {
+                    <span>@portalData.Name</span>
+                }
+                else
+                {
+                    <span>@categoryData.Name</span>
+                }
+            </h1>
+
+            @RenderTemplate("SearchBanner.cshtml", appThemeDefault, Model, true)
 
             <div id="datalist2" class="productgrid productgrid3">
                 @{
@@ -187,7 +201,7 @@
                 }
             </div>
 
-            @RenderTemplate("ProductPaging.cshtml", appTheme, Model, true)
+            @RenderTemplate("ProductPaging.cshtml", appThemeDefault, Model, true)
 
         </div>
 

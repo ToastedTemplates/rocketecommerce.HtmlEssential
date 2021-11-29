@@ -246,7 +246,7 @@
     });
 
     function addproducttocart(productid, spost) {
-        $('#simplisity_loader').show();
+        $('.simplisity_loader').show();
         $('#productmodelid' + productid).hide();
         $('#minicartdisplay').getSimplisity('@(sessionParams.ApiUrl)', 'remote_addtocart', '{"template":"MiniCart.cshtml","productid":"' + productid + '","moduleref":"@(remoteModule.ModuleRef)"}', '', spost)
     }

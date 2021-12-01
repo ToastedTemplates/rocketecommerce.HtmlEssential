@@ -10,7 +10,7 @@
     var productData = (ProductLimpet)Model.GetDataObject("productdata");
     var sessionParams = (SessionParams)Model.SessionParamsData;
     var portalData = new PortalLimpet(PortalUtils.GetCurrentPortalId());
-    var remoteModule = (RemoteModule)Model.GetDataObject("remotemodule");
+    var appTheme = (AppThemeLimpet)Model.GetDataObject("apptheme");
 }
 
 @if (productData != null)
@@ -50,8 +50,8 @@
 
 <link rel="stylesheet" href="@(sessionParams.EngineURL)@DNNrocketUtils.AppendFileModifiedDate("/DesktopModules/DNNrocket/API/Themes/config-w3/1.0/css/" + portalData.ColorFrontTheme)">
 <script type="text/javascript" src="@(sessionParams.EngineURL)@DNNrocketUtils.AppendFileModifiedDate("/DesktopModules/DNNrocket/Simplisity/js/simplisity.js")"></script>
-<script type="text/javascript" src="@(sessionParams.EngineURL)@DNNrocketUtils.AppendFileModifiedDate("/DesktopModules/RocketThemes/" + remoteModule.AppThemeViewFolder + "/" + remoteModule.AppThemeViewVersion + "/js/frontend.js")"></script>
-<link rel="stylesheet" href="@(sessionParams.EngineURL)@DNNrocketUtils.AppendFileModifiedDate("/DesktopModules/RocketThemes/" + remoteModule.AppThemeViewFolder + "/" + remoteModule.AppThemeViewVersion + "/css/theme.css")">
+<script type="text/javascript" src="@(sessionParams.EngineURL)@DNNrocketUtils.AppendFileModifiedDate("/DesktopModules/RocketThemes/" + appTheme.AppThemeFolder + "/" + appTheme.AppVersionFolder + "/js/frontend.js")"></script>
+<link rel="stylesheet" href="@(sessionParams.EngineURL)@DNNrocketUtils.AppendFileModifiedDate("/DesktopModules/RocketThemes/" + appTheme.AppThemeFolder + "/" + appTheme.AppVersionFolder + "/css/theme.css")">
 <script type="text/javascript" src="@(sessionParams.EngineURL)@DNNrocketUtils.AppendFileModifiedDate("/DesktopModules/DNNrocket/js/jquery.validate.min.js")"></script>
 
 @if (DNNrocketUtils.GetLanguageCode(sessionParams.CultureCode) != "en")
@@ -64,7 +64,8 @@
 <script>
 
     $(document).ready(function () {
-
+        // SESSIONPARAMS SO THEY ARE AVAILABLE FOR REMOTE SERVER RENDERING.
+        simplisity_setSessionField('culturecode', '@sessionParams.CultureCode');
     });
 
     function validatePayment() {

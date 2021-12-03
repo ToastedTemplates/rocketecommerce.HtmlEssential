@@ -28,17 +28,6 @@
 
         <div id="datasection" class="productlistdisplay">
 
-            <h1>
-                @if (!categoryData.Exists)
-                {
-                    <span>@companyData.CompanyName</span>
-                }
-                else
-                {
-                    <span>@categoryData.Name</span>
-                }
-            </h1>
-
             @RenderTemplate("SearchBanner.cshtml", appThemeDefault, Model, true)
 
             <div id="datalist2" class="productgrid productgrid3">

@@ -5,6 +5,8 @@
 @using DNNrocketAPI.Components;
 @using RocketPortal.Components;
 
+@SecuritySiteKey(Model.SessionParamsData)
+
 @{
     var portalShop = (PortalShopLimpet)Model.List.First();
     var productData = (ProductLimpet)Model.GetDataObject("productdata");

@@ -4,8 +4,6 @@
 @using DNNrocketAPI.Components;
 @using RocketPortal.Components;
 
-@SecuritySiteKey(Model.SessionParamsData)
-
 @AddProcessData("resourcepath", "/DesktopModules/DNNrocket/api/App_LocalResources/")
 @AddProcessData("resourcepath", "/DesktopModules/DNNrocketModules/RocketECommerce/App_LocalResources/")
 
@@ -75,15 +73,7 @@
                         <div class="productcontent">
                             <h3>
                                 <a href="javascript:void(0)" onclick="showproductmodel(@(productData.ProductId))">
-                                    @if (productData.Name.Length > 20)
-                                    {
-                                        @productData.Name.Substring(0, 20)
-                                        <span>...</span>
-                                    }
-                                    else
-                                    {
                                         @productData.Name
-                                    }
                                 </a>
                             </h3>
                             <div class="w3-row">
@@ -113,7 +103,10 @@
 
                             <div class="w3-display-topright w3-button" onclick="$('#productmodelid@(productData.ProductId)').hide();">&times;</div>
 
+                            <div class="w3-xlarge w3-padding"><b>@productData.Name</b></div>
+
                             <div class="productquickview">
+
 
                                 <div class="quickviewimage">
                                     <img src="@ThumbnailImageWebsiteDomainUrl(portalData.EngineUrlWithProtocol,logoRelPath,450, 450)" popupsrc="@ThumbnailImageWebsiteDomainUrl(portalData.EngineUrlWithProtocol, logoRelPath, 800, 0)" class="imgrollovertarget" alt="@productData.Name" onclick="popupImage(this)" />

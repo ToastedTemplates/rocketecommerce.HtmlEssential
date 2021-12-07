@@ -5,13 +5,11 @@
 @using DNNrocketAPI.Components;
 @using RocketPortal.Components;
 
-@SecuritySiteKey(Model.SessionParamsData)
-
 @{
     var portalShop = (PortalShopLimpet)Model.List.First();
     var productData = (ProductLimpet)Model.GetDataObject("productdata");
     var sessionParams = (SessionParams)Model.SessionParamsData;
-    var portalData = new PortalLimpet(PortalUtils.GetCurrentPortalId());
+    var portalData = new PortalLimpet(portalShop.PortalId);
     var appTheme = (AppThemeLimpet)Model.GetDataObject("apptheme");
 }
 
@@ -47,8 +45,6 @@
     </script>
 
 }
-
-<link rel="stylesheet" href="@(sessionParams.EngineURL)@DNNrocketUtils.AppendFileModifiedDate("/DesktopModules/DNNrocket/css/w3.css")">
 
 <link rel="stylesheet" href="@(sessionParams.EngineURL)@DNNrocketUtils.AppendFileModifiedDate("/DesktopModules/DNNrocket/API/Themes/config-w3/1.0/css/" + portalData.ColorFrontTheme)">
 <script type="text/javascript" src="@(sessionParams.EngineURL)@DNNrocketUtils.AppendFileModifiedDate("/DesktopModules/DNNrocket/Simplisity/js/simplisity.js")"></script>

@@ -30,7 +30,7 @@
 
             @RenderTemplate("SearchBanner.cshtml", appThemeDefault, Model, true)
 
-            <div id="datalist2" class="productgrid productgrid3">
+            <div id="datalist2" class="productgrid">
                 @{
                     var lp1 = 0;
                 }
@@ -47,7 +47,7 @@
                     <div class="product">
 
                         <div class="productimg">
-                            <img src="@ThumbnailImageWebsiteDomainUrl(portalData.EngineUrlWithProtocol,logoRelPath,300,300)" alt="@productData.Name" />
+                            <img src="@ThumbnailImageWebsiteDomainUrl(portalData.EngineUrlWithProtocol,logoRelPath,480,480)" alt="@productData.Name" />
                             <!-- Rollover -->
                             <div class="productrollover">
                                 <div class="productrollover-content">
@@ -103,10 +103,7 @@
 
                             <div class="w3-display-topright w3-button" onclick="$('#productmodelid@(productData.ProductId)').hide();">&times;</div>
 
-                            <div class="w3-xlarge w3-padding"><b>@productData.Name</b></div>
-
                             <div class="productquickview">
-
 
                                 <div class="quickviewimage">
                                     <img src="@ThumbnailImageWebsiteDomainUrl(portalData.EngineUrlWithProtocol,logoRelPath,450, 450)" popupsrc="@ThumbnailImageWebsiteDomainUrl(portalData.EngineUrlWithProtocol, logoRelPath, 800, 0)" class="imgrollovertarget" alt="@productData.Name" onclick="popupImage(this)" />
@@ -129,6 +126,8 @@
                                 </div>
 
                                 <div class="quickviewcontent">
+								
+									<h2>@productData.Name</h2>
 
                                     @if (productData.GetModelList().Count > 1)
                                     {
@@ -157,7 +156,7 @@
                                         {
                                             displaymodels = "";
                                         }
-                                        <div id="modelinput@(productData.ProductId)" class="w3-border w3-white w3-margin-bottom modelinput @displaymodels">@ModelDropdown(productData)</div>
+                                        <div id="modelinput@(productData.ProductId)" class="w3-white w3-margin-bottom modelinput @displaymodels">@ModelDropdown(productData)</div>
                                         <div id="optionsinput@(productData.ProductId)" class="w3-white w3-margin-bottom modelinput">@OptionsInput(productData)</div>
                                     </div>
 
@@ -165,7 +164,7 @@
                                         <div class="quickviewqty">
                                             <div class="w3-bar">
                                                 <div class="w3-bar-item w3-border w3-col w3-center w3-button product-subtract" productid="@(productData.ProductId)">&minus;</div>
-                                                <input type="number" readonly min="10" max="999" class="w3-bar-item w3-col w3-input w3-border-top w3-border-bottom w3-center qtyvalue" id="qty@(productData.ProductId)" s-xpath="genxml/textbox/qty" value="1" style="width:60px;" />
+                                                <input type="number" min="0" class="w3-bar-item w3-col w3-input w3-border-top w3-border-bottom w3-center qtyvalue" id="qty@(productData.ProductId)" s-xpath="genxml/textbox/qty" value="1" style="width:60px;" />
                                                 <div class="w3-bar-item w3-border w3-col w3-center w3-button product-plus" productid="@(productData.ProductId)">&plus;</div>
                                             </div>
                                         </div>

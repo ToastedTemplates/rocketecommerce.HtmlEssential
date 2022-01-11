@@ -72,7 +72,9 @@ input[type=number].qtyvalue {
 .w3-panel h4 {margin:0;}
 .w3-modal {z-index:9900;}
 /* Addons */
-.searchdata {margin:0 0 30px 0;}
+.searchdata {font-size:15px;line-height:18px;margin:30px 0;}
+.searchdata input, .searchdata select {height:42px;}
+.searchdata input#searchtext {border-right:none !important;}
 .categorytree {font-size:15px;line-height:18px;padding-bottom:16px;}
 a.categoryitem {display:block;padding:8px 16px;}
 a.categoryitem:link, a.categoryitem:visited {color:#282828;}
